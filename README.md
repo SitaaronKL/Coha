@@ -1,14 +1,43 @@
-# Cohamaster
+### Coha
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+*A smart roommate matching platform for college students*
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/sitaaronkls-projects/v0-cohamaster)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/MDVbbOc59fD)
+[
+
+](https://vercel.com/sitaaronkls-projects/v0-cohamaster)
+[
+
+](https://v0.dev/chat/projects/MDVbbOc59fD)
 
 ## Overview
 
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+Coha is an innovative platform designed to help college students find their ideal roommates through personality-based matching. Using advanced compatibility algorithms and MBTI personality insights, Coha creates meaningful connections that lead to more harmonious living arrangements.
+
+## Key Features
+
+- **Personality-Based Matching**: Leverages MBTI personality types to find truly compatible roommates
+- **Interactive Questionnaire**: Simple yet comprehensive questionnaire to understand your personality and preferences
+- **Visual Compatibility**: See how your personality traits align with potential roommates through intuitive visualizations
+- **Secure Messaging**: Connect and communicate with potential matches in a safe environment
+- **User-Friendly Dashboard**: Easily manage your profile, view matches, and track conversations
+
+
+## Technology Stack
+
+- **Frontend**: Next.js, React, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL)
+- **Authentication**: Secure email-based authentication
+- **Deployment**: Vercel
+
+
+## Getting Started
+
+1. Create an account using your email
+2. Complete the personality questionnaire
+3. Browse through your matches
+4. Connect with potential roommates
+5. Find your ideal living situation!
+
 
 ## Deployment
 
@@ -28,3 +57,12 @@ Continue building your app on:
 2. Deploy your chats from the v0 interface
 3. Changes are automatically pushed to this repository
 4. Vercel deploys the latest version from this repository
+
+
+## About
+
+Coha was created to solve the common problem of roommate incompatibility in college housing. By focusing on personality traits and lifestyle preferences rather than just basic demographics, Coha helps students find roommates they'll truly get along with, creating better living experiences and lasting friendships.
+
+## License
+
+© 2023 Coha. All rights reserved.
