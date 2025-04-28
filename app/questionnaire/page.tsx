@@ -255,7 +255,7 @@ export default function QuestionnairePage() {
       <header className="border-b border-gray-200 bg-white/80 backdrop-blur-md shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-md bg-black flex items-center justify-center text-white font-semibold">
+            <div className="w-8 h-8 rounded-md bg-softblack flex items-center justify-center text-white font-semibold">
               CH
             </div>
             <span className="font-medium text-gray-900">Coha</span>
@@ -375,7 +375,7 @@ export default function QuestionnairePage() {
               <Button
                 onClick={handleSubmit}
                 disabled={!answers[mbtiQuestion.id] || isLoading}
-                className="bg-black hover:bg-gray-800 text-white"
+                className="bg-softblack hover:bg-gray-800 text-white"
               >
                 {isLoading ? (
                   <>
@@ -393,7 +393,7 @@ export default function QuestionnairePage() {
               <Button
                 onClick={handleNext}
                 disabled={!canProceed || isLoading}
-                className="bg-black hover:bg-gray-800 text-white"
+                className="bg-softblack hover:bg-gray-800 text-white"
               >
                 {isLastLifestyleQuestion ? "Continue to Part 2" : "Next"}
                 <ChevronRight className="ml-2 h-4 w-4" />

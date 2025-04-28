@@ -61,7 +61,7 @@ export function DashboardHeader({ user: initialUser }: DashboardHeaderProps) {
           <MobileNav user={user} />
 
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-md bg-black text-white flex items-center justify-center font-semibold">
+            <div className="w-8 h-8 rounded-md bg-softblack text-white flex items-center justify-center font-semibold">
               CH
             </div>
             <span className="font-medium hidden md:inline text-gray-900">Coha</span>

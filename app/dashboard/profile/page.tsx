@@ -415,7 +415,7 @@ export default function ProfilePage() {
                   <CardDescription className="text-center">{authError}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex justify-center">
-                  <Button asChild className="bg-black hover:bg-gray-800 text-white">
+                  <Button asChild className="bg-softblack hover:bg-gray-800 text-white">
                     <Link href="/auth">Log In Again</Link>
                   </Button>
                 </CardContent>
@@ -698,7 +698,7 @@ export default function ProfilePage() {
                       <Switch
                         checked={userData.showEmail}
                         onCheckedChange={(checked) => handleSwitchChange("showEmail", checked)}
-                        className="data-[state=checked]:bg-black"
+                        className="data-[state=checked]:bg-softblack"
                       />
                     </div>
 
@@ -712,7 +712,7 @@ export default function ProfilePage() {
                       <Switch
                         checked={userData.showPhone}
                         onCheckedChange={(checked) => handleSwitchChange("showPhone", checked)}
-                        className="data-[state=checked]:bg-black"
+                        className="data-[state=checked]:bg-softblack"
                       />
                     </div>
 
@@ -726,7 +726,7 @@ export default function ProfilePage() {
                       <Switch
                         checked={userData.showSocial}
                         onCheckedChange={(checked) => handleSwitchChange("showSocial", checked)}
-                        className="data-[state=checked]:bg-black"
+                        className="data-[state=checked]:bg-softblack"
                       />
                     </div>
                   </CardContent>
@@ -738,7 +738,7 @@ export default function ProfilePage() {
               <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100">
                 Cancel
               </Button>
-              <Button onClick={handleSave} disabled={isLoading} className="bg-black hover:bg-gray-800 text-white">
+              <Button onClick={handleSave} disabled={isLoading} className="bg-softblack hover:bg-gray-800 text-white">
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

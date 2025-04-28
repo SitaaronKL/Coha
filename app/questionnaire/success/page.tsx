@@ -14,7 +14,7 @@ export default function SuccessPage() {
       <header className="border-b border-gray-200 bg-white/80 backdrop-blur-md shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-md bg-black flex items-center justify-center text-white font-semibold">
+            <div className="w-8 h-8 rounded-md bg-softblack flex items-center justify-center text-white font-semibold">
               CH
             </div>
             <span className="font-medium text-gray-900">Coha</span>
@@ -53,8 +53,8 @@ export default function SuccessPage() {
       <main className="flex-1 flex items-center justify-center p-4">
         <Card className="w-full max-w-md bg-white border-gray-200 shadow-md">
           <CardHeader className="text-center">
-            <div className="mx-auto w-16 h-16 bg-black/5 rounded-full flex items-center justify-center mb-4">
-              <CheckCircle className="h-8 w-8 text-black" />
+            <div className="mx-auto w-16 h-16 bg-softblack/5 rounded-full flex items-center justify-center mb-4">
+              <CheckCircle className="h-8 w-8 text-softblack" />
             </div>
             <CardTitle className="text-2xl text-gray-900">Questionnaire Completed!</CardTitle>
             <CardDescription className="text-gray-600">
@@ -68,7 +68,7 @@ export default function SuccessPage() {
             </p>
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
-            <Button asChild className="w-full bg-black hover:bg-gray-800 text-white">
+            <Button asChild className="w-full bg-softblack hover:bg-gray-800 text-white">
               <Link href="/dashboard">View Your Dashboard</Link>
             </Button>
             <Button asChild variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-100">

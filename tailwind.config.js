@@ -65,6 +65,8 @@ module.exports = {
           900: "#111827",
           950: "#030712",
         },
+        // Add custom black color that's one pixel lighter than pure black
+        softblack: "#010101",
       },
       borderRadius: {
         lg: "var(--radius)",

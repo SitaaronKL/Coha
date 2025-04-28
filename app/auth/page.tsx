@@ -349,7 +349,7 @@ export default function AuthPage() {
       <div className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
           <div className="flex items-center gap-2 mb-8 justify-center">
-            <div className="w-10 h-10 rounded-md bg-black flex items-center justify-center text-white font-semibold">
+            <div className="w-10 h-10 rounded-md bg-softblack flex items-center justify-center text-white font-semibold">
               CH
             </div>
             <span className="font-medium text-xl text-gray-900">Coha</span>
@@ -436,7 +436,11 @@ export default function AuthPage() {
                     )}
                   </CardContent>
                   <CardFooter>
-                    <Button type="submit" className="w-full bg-black hover:bg-gray-800 text-white" disabled={isLoading}>
+                    <Button
+                      type="submit"
+                      className="w-full bg-softblack hover:bg-gray-800 text-white"
+                      disabled={isLoading}
+                    >
                       {isLoading ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -576,7 +580,11 @@ export default function AuthPage() {
                     )}
                   </CardContent>
                   <CardFooter className="flex flex-col space-y-4">
-                    <Button type="submit" className="w-full bg-black hover:bg-gray-800 text-white" disabled={isLoading}>
+                    <Button
+                      type="submit"
+                      className="w-full bg-softblack hover:bg-gray-800 text-white"
+                      disabled={isLoading}
+                    >
                       {isLoading ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />

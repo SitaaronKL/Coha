@@ -274,7 +274,7 @@ export default function DashboardPage() {
           <h2 className="text-xl font-bold text-gray-900 mb-2">Something went wrong</h2>
           <p className="text-gray-600 mb-4">{error}</p>
           <div className="flex gap-4 justify-center">
-            <Button onClick={() => fetchDashboardData()} className="bg-black hover:bg-gray-800 text-white">
+            <Button onClick={() => fetchDashboardData()} className="bg-softblack hover:bg-gray-800 text-white">
               Try Again
             </Button>
             <Button variant="outline" onClick={signOut} className="border-gray-300 text-gray-700 hover:bg-gray-100">
@@ -348,7 +348,7 @@ export default function DashboardPage() {
                       </p>
                     </div>
                     <Link href="/questionnaire" className="block">
-                      <Button className="bg-blue-600 hover:bg-blue-700 text-white">Complete Questionnaire</Button>
+                      <Button className="bg-softblack hover:bg-blue-700 text-white">Complete Questionnaire</Button>
                     </Link>
                   </div>
                 </div>

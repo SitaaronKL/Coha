@@ -92,7 +92,7 @@ export default function Home() {
       <header className="border-b border-gray-200/40 backdrop-blur-md bg-white/80 sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-md bg-black text-white flex items-center justify-center font-semibold">
+            <div className="w-8 h-8 rounded-md bg-softblack text-white flex items-center justify-center font-semibold">
               CH
             </div>
             <span className="font-medium">Coha</span>
@@ -126,7 +126,7 @@ export default function Home() {
             >
               <Link href="/auth?tab=login">Log in</Link>
             </Button>
-            <Button size="sm" className="bg-black hover:bg-gray-800 text-white" asChild>
+            <Button size="sm" className="bg-softblack hover:bg-gray-800 text-white" asChild>
               <Link href="/auth?tab=signup">Sign Up</Link>
             </Button>
           </div>
@@ -277,7 +277,7 @@ export default function Home() {
 
               {/* Fourth Quadrant - Down Arrow */}
               <div
-                className="bg-black rounded-xl p-4 md:p-8 shadow-sm flex items-center justify-center cursor-pointer transition-transform hover:translate-y-1"
+                className="bg-softblack rounded-xl p-4 md:p-8 shadow-sm flex items-center justify-center cursor-pointer transition-transform hover:translate-y-1"
                 onClick={() => scrollToSection(processRef)}
               >
                 <div className="text-center">
@@ -387,7 +387,7 @@ export default function Home() {
                         We only accept .edu email addresses to ensure a safe community
                       </p>
                     </div>
-                    <Button className="w-full bg-black hover:bg-gray-800 text-white" asChild>
+                    <Button className="w-full bg-softblack hover:bg-gray-800 text-white" asChild>
                       <Link href="/auth?tab=signup">
                         Create Your Profile <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
@@ -406,7 +406,7 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-md bg-black flex items-center justify-center text-white font-semibold">
+                <div className="w-8 h-8 rounded-md bg-softblack flex items-center justify-center text-white font-semibold">
                   CH
                 </div>
                 <span className="font-medium text-gray-900">Coha</span>
