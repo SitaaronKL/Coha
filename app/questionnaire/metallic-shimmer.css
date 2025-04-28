@@ -1,0 +1,94 @@
+/* Base metallic shimmer effect */
+.metallic-text {
+  font-weight: 600;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+/* Default state (non-hovering) */
+.mbti-button .metallic-text {
+  background-image: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 300% 0;
+  }
+}
+
+/* Analysts - Purple metallic */
+.metallic-analysts {
+  background-image: linear-gradient(135deg, #d8c1e3 0%, #ffffff 25%, #a87bb7 50%, #8e5e9f 75%, #d8c1e3 100%);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Diplomats - Teal metallic */
+.metallic-diplomats {
+  background-image: linear-gradient(135deg, #a8e6df 0%, #ffffff 25%, #3dbdad 50%, #2a9d8f 75%, #a8e6df 100%);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Sentinels - Blue metallic */
+.metallic-sentinels {
+  background-image: linear-gradient(135deg, #a8d1e6 0%, #ffffff 25%, #4a9cc2 50%, #3a86a8 75%, #a8d1e6 100%);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Explorers - Gold metallic */
+.metallic-explorers {
+  background-image: linear-gradient(135deg, #f2d68c 0%, #ffffff 25%, #e9b52a 50%, #d9a404 75%, #f2d68c 100%);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+/* Hover states for each category */
+.mbti-button:hover .metallic-analysts {
+  background-image: linear-gradient(135deg, #d8c1e3 0%, #ffffff 25%, #a87bb7 50%, #8e5e9f 75%, #d8c1e3 100%);
+  background-size: 300% auto;
+  animation: shimmer 6s linear infinite;
+  color: transparent;
+}
+
+.mbti-button:hover .metallic-diplomats {
+  background-image: linear-gradient(135deg, #a8e6df 0%, #ffffff 25%, #3dbdad 50%, #2a9d8f 75%, #a8e6df 100%);
+  background-size: 300% auto;
+  animation: shimmer 6s linear infinite;
+  color: transparent;
+}
+
+.mbti-button:hover .metallic-sentinels {
+  background-image: linear-gradient(135deg, #a8d1e6 0%, #ffffff 25%, #4a9cc2 50%, #3a86a8 75%, #a8d1e6 100%);
+  background-size: 300% auto;
+  animation: shimmer 6s linear infinite;
+  color: transparent;
+}
+
+.mbti-button:hover .metallic-explorers {
+  background-image: linear-gradient(135deg, #f2d68c 0%, #ffffff 25%, #e9b52a 50%, #d9a404 75%, #f2d68c 100%);
+  background-size: 300% auto;
+  animation: shimmer 6s linear infinite;
+  color: transparent;
+}
+
+/* Selected state - keep the shimmer effect active */
+.mbti-button.selected .metallic-analysts,
+.mbti-button.selected .metallic-diplomats,
+.mbti-button.selected .metallic-sentinels,
+.mbti-button.selected .metallic-explorers {
+  background-image: linear-gradient(135deg, #ffffff 0%, #ffffff 50%, #ffffff 100%);
+  background-size: 200% auto;
+  animation: none;
+  color: transparent;
+}

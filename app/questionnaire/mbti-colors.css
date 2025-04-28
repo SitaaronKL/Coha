@@ -1,0 +1,39 @@
+.mbti-analysts {
+  background-color: #8e5e9f;
+}
+.mbti-analysts:hover {
+  background-color: #7d4f8c;
+}
+.mbti-analysts:active {
+  background-color: #6c4079;
+}
+
+.mbti-diplomats {
+  background-color: #2a9d8f;
+}
+.mbti-diplomats:hover {
+  background-color: #248a7e;
+}
+.mbti-diplomats:active {
+  background-color: #1e776d;
+}
+
+.mbti-sentinels {
+  background-color: #3a86a8;
+}
+.mbti-sentinels:hover {
+  background-color: #327594;
+}
+.mbti-sentinels:active {
+  background-color: #2a6480;
+}
+
+.mbti-explorers {
+  background-color: #d9a404;
+}
+.mbti-explorers:hover {
+  background-color: #c29203;
+}
+.mbti-explorers:active {
+  background-color: #ab8003;
+}
