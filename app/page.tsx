@@ -59,6 +59,9 @@ const TypedText = ({ text, className, delay = 0 }) => {
 export default function Home() {
   const [scrollY, setScrollY] = useState(0)
   const heroRef = useRef(null)
+  const statsRef = useRef(null)
+  const processRef = useRef(null)
+  const getStartedRef = useRef(null)
   const isInView = useInView(heroRef, { once: true })
   const controls = useAnimation()
 
@@ -77,6 +80,12 @@ export default function Home() {
     }
   }, [isInView, controls])
 
+  const scrollToSection = (ref) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   return (
     <div className={`min-h-screen bg-white text-gray-900 ${inter.className}`}>
       {/* Keep the existing header section */}
@@ -89,15 +98,24 @@ export default function Home() {
             <span className="font-medium">Coha</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-              How It Works
-            </Link>
-            <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-              Universities
-            </Link>
-            <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-              FAQ
-            </Link>
+            <button
+              onClick={() => scrollToSection(statsRef)}
+              className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+            >
+              Why?
+            </button>
+            <button
+              onClick={() => scrollToSection(processRef)}
+              className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+            >
+              How?
+            </button>
+            <button
+              onClick={() => scrollToSection(getStartedRef)}
+              className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+            >
+              Get started
+            </button>
           </nav>
           <div className="flex items-center gap-3">
             <Button
@@ -221,7 +239,7 @@ export default function Home() {
 
         {/* Statistics Section - with typing animation and white background */}
         {/* Statistics Section - Quadrant Layout */}
-        <section className="py-24 bg-white">
+        <section ref={statsRef} className="py-24 bg-white">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 max-w-5xl mx-auto gap-6">
               {/* First Quadrant - Statistic 1 */}
@@ -260,12 +278,7 @@ export default function Home() {
               {/* Fourth Quadrant - Down Arrow */}
               <div
                 className="bg-black rounded-xl p-4 md:p-8 shadow-sm flex items-center justify-center cursor-pointer transition-transform hover:translate-y-1"
-                onClick={() => {
-                  const processSection = document.getElementById("process-section")
-                  if (processSection) {
-                    processSection.scrollIntoView({ behavior: "smooth" })
-                  }
-                }}
+                onClick={() => scrollToSection(processRef)}
               >
                 <div className="text-center">
                   <div className="flex flex-col items-center">
@@ -283,7 +296,7 @@ export default function Home() {
         {/* Third statistic - white background */}
 
         {/* Process Comparison Section */}
-        <section id="process-section" className="py-24 bg-white">
+        <section id="process-section" ref={processRef} className="py-24 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">A Better Way to Match</h2>
 
@@ -348,7 +361,7 @@ export default function Home() {
         </section>
 
         {/* Get Started Section - Modified as requested */}
-        <section className="py-24 bg-white relative z-10">
+        <section ref={getStartedRef} className="py-24 bg-white relative z-10">
           <div className="container mx-auto px-4 max-w-3xl">
             <div className="text-center">
               <motion.div
@@ -406,24 +419,28 @@ export default function Home() {
               <h4 className="font-medium mb-3 text-gray-900">Product</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-                    How It Works
-                  </Link>
+                  <button
+                    onClick={() => scrollToSection(statsRef)}
+                    className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                  >
+                    Why?
+                  </button>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-                    Universities
-                  </Link>
+                  <button
+                    onClick={() => scrollToSection(processRef)}
+                    className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                  >
+                    How?
+                  </button>
                 </li>
                 <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-                    Success Stories
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-                    Pricing
-                  </Link>
+                  <button
+                    onClick={() => scrollToSection(getStartedRef)}
+                    className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+                  >
+                    Get started
+                  </button>
                 </li>
               </ul>
             </div>
