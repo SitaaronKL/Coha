@@ -135,16 +135,20 @@ export default function Home() {
 
       <main>
         {/* Hero Section - Minimalist with animated text */}
-        <section ref={heroRef} className="min-h-[90vh] flex flex-col items-center justify-center relative">
-          <div className="text-center">
+        <section ref={heroRef} className="min-h-[90vh] flex flex-col items-center justify-center relative px-2">
+          {" "}
+          {/* Add horizontal padding */}
+          <div className="text-center px-4 w-full">
+            {" "}
+            {/* Add padding and full width */}
             {/* SVG for drawing animation */}
             <motion.svg
-              width="420" // Adjusted width to account for closer letters
-              height="130"
+              width="100%" // Change from fixed width to 100%
+              height="auto" // Auto height to maintain aspect ratio
               viewBox="0 0 420 130"
               initial="hidden"
               animate={controls}
-              className="mx-auto"
+              className="mx-auto max-w-[420px]" // Add max-width to prevent it from getting too large
             >
               {/* C */}
               <motion.path
@@ -224,7 +228,6 @@ export default function Home() {
                 }}
               />
             </motion.svg>
-
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
