@@ -76,6 +76,17 @@ export async function POST(request: Request) {
         )
       }
 
+      // Improved error message for duplicate email
+      if (profileError.message.includes("duplicate key") || profileError.message.includes("profiles_email_key")) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "This email is already taken! Please use a different email address.",
+          },
+          { status: 409 },
+        )
+      }
+
       return NextResponse.json({ success: false, error: profileError.message }, { status: 500 })
     }
 

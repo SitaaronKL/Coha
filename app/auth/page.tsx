@@ -184,16 +184,17 @@ export default function AuthPage() {
     e.preventDefault()
     setIsLoading(true)
     setLoginError(null)
-    setDebugInfo(null)
+    setDebugInfo(null) // Always clear debug info
 
     try {
       console.log("[AUTH PAGE] Attempting login with:", loginData.email)
       const authData = await signIn(loginData.email, loginData.password)
       console.log("[AUTH PAGE] Login successful, auth data:", authData)
 
-      // Debug auth state before redirect
+      // Debug auth state before redirect - but don't display to user
       const debugResult = await debugAuthState()
       console.log("[AUTH PAGE] Debug auth state before redirect:", debugResult)
+      // Don't set debug info to UI: setDebugInfo(JSON.stringify(debugResult, null, 2))
 
       // Show success message
       toast({
@@ -209,13 +210,13 @@ export default function AuthPage() {
       }, 1000)
     } catch (error) {
       console.error("[AUTH PAGE] Login error details:", error)
-      setLoginError(error.message || "Failed to login. Please check your credentials and try again.")
+      setLoginError(error.message || "Invalid login credentials. Please check your email and password.")
 
-      // Run debug to get more info
+      // Run debug to get more info - but don't display to user
       try {
         const debugResult = await debugAuthState()
         console.log("[AUTH PAGE] Debug after error:", debugResult)
-        setDebugInfo(JSON.stringify(debugResult, null, 2))
+        // Don't set debug info to UI: setDebugInfo(JSON.stringify(debugResult, null, 2))
       } catch (debugError) {
         console.error("[AUTH PAGE] Debug error:", debugError)
       }
@@ -291,15 +292,24 @@ export default function AuthPage() {
           return
         } else if (error.message?.includes("foreign key constraint")) {
           setSignupError("Account creation failed due to a database error. Please try again in a few moments.")
+        } else if (error.message?.includes("duplicate key") || error.message?.includes("profiles_email_key")) {
+          // Improved error message for duplicate email
+          setSignupError("This email is already taken! Please use a different email address.")
+
+          toast({
+            title: "Signup failed",
+            description: "This email is already taken! Please use a different email address.",
+            variant: "destructive",
+          })
         } else {
           setSignupError(error.message || "Failed to create account. Please check your information and try again.")
-        }
 
-        toast({
-          title: "Signup failed",
-          description: error.message || "Please check your information and try again.",
-          variant: "destructive",
-        })
+          toast({
+            title: "Signup failed",
+            description: error.message || "Please check your information and try again.",
+            variant: "destructive",
+          })
+        }
       }
     } catch (error) {
       console.error("[AUTH PAGE] Form validation error:", error)
@@ -345,8 +355,8 @@ export default function AuthPage() {
             <span className="font-medium text-xl text-gray-900">Coha</span>
           </div>
 
-          {/* Debug info display */}
-          {debugInfo && (
+          {/* Debug info display - only show in development and when explicitly needed */}
+          {process.env.NODE_ENV === "development" && debugInfo && (
             <div className="mb-4 p-3 bg-gray-100 border border-gray-300 rounded-md text-xs font-mono overflow-auto max-h-40">
               <pre>{debugInfo}</pre>
             </div>

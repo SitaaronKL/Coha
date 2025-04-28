@@ -58,6 +58,11 @@ export async function signUp(
     const result = await response.json()
 
     if (!response.ok || !result.success) {
+      // Check for duplicate email error
+      if (result.error && (result.error.includes("duplicate key") || result.error.includes("profiles_email_key"))) {
+        throw new Error("This email is already taken! Please use a different email address.")
+      }
+
       throw new Error(result.error || "Failed to create user profile")
     }
 
