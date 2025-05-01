@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Inter } from "next/font/google"
-import { Calendar, ChevronRight, Settings, Star, Users, Loader2, ClipboardList } from "lucide-react"
+import { Calendar, Settings, Loader2, ClipboardList } from "lucide-react"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { MatchCard } from "@/components/match-card"
 import Link from "next/link"
@@ -18,74 +17,11 @@ import { useToast } from "@/components/ui/use-toast"
 
 const inter = Inter({ subsets: ["latin"] })
 
-// Mock data for matches (keeping static as requested)
-const matches = [
-  {
-    id: 1,
-    name: "Alex Johnson",
-    avatar: "/placeholder.svg?height=400&width=400&text=AJ",
-    major: "Computer Science",
-    year: "Junior",
-    compatibility: 92,
-    bio: "Early riser who enjoys a clean space. I study with music and am fairly social on weekends.",
-    tags: ["Early Bird", "Neat", "Music Lover"],
-    instagram: "alex.johnson",
-    twitter: "alexj",
-    email: "alex.j@university.edu",
-    phone: "(555) 123-4567",
-    matchingTraits: [
-      { category: "Sleep Schedule", value: "Early bird (10pm - 6am)", match: true },
-      { category: "Cleanliness", value: "Very neat and organized", match: true },
-      { category: "Noise Level", value: "Some background noise is fine", match: true },
-      { category: "Social Style", value: "Balanced, enjoy socializing and alone time", match: false },
-    ],
-  },
-  {
-    id: 2,
-    name: "Sam Rivera",
-    avatar: "/placeholder.svg?height=400&width=400&text=SR",
-    major: "Business Administration",
-    year: "Senior",
-    compatibility: 87,
-    bio: "Business major who loves sports and keeping active. I'm organized and prefer a quiet space for studying.",
-    tags: ["Athletic", "Organized", "Early Bird"],
-    instagram: "sam.rivera",
-    twitter: "samr",
-    email: "sam.r@university.edu",
-    phone: "(555) 234-5678",
-    matchingTraits: [
-      { category: "Sleep Schedule", value: "Early bird (10pm - 6am)", match: true },
-      { category: "Cleanliness", value: "Generally tidy", match: true },
-      { category: "Noise Level", value: "I prefer complete silence", match: false },
-      { category: "Social Style", value: "Very social, love having friends over", match: false },
-    ],
-  },
-  {
-    id: 3,
-    name: "Jordan Lee",
-    avatar: "/placeholder.svg?height=400&width=400&text=JL",
-    major: "Psychology",
-    year: "Sophomore",
-    compatibility: 85,
-    bio: "Psychology student who enjoys reading and occasional social outings. I keep things tidy and respect quiet hours.",
-    tags: ["Reader", "Tidy", "Respectful"],
-    instagram: "jordan.lee",
-    twitter: "jordanl",
-    email: "jordan.l@university.edu",
-    phone: "(555) 345-6789",
-    matchingTraits: [
-      { category: "Sleep Schedule", value: "Average (11pm - 7am)", match: false },
-      { category: "Cleanliness", value: "Generally tidy", match: true },
-      { category: "Noise Level", value: "I prefer complete silence", match: false },
-      { category: "Social Style", value: "Balanced, enjoy socializing and alone time", match: true },
-    ],
-  },
-]
-
 export default function DashboardPage() {
   const { user, loading, signOut } = useAuth()
   const router = useRouter()
   const [profile, setProfile] = useState<any>(null)
+  const [matches, setMatches] = useState<any[]>([])
   const [deadlines, setDeadlines] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -151,6 +87,68 @@ export default function DashboardPage() {
       }
 
       setProfile(profileData)
+
+      // Fetch user's matches - using the actual schema structure
+      try {
+        // First, get matches where the user is user_id_1
+        const { data: matchesAsUser1, error: matchesAsUser1Error } = await supabase
+          .from("matches")
+          .select(`
+            *,
+            matched_profile:user_id_2 (
+              id,
+              first_name,
+              last_name,
+              avatar_url,
+              major,
+              year,
+              bio,
+              email,
+              phone,
+              instagram,
+              twitter
+            )
+          `)
+          .eq("user_id_1", user.id)
+          .order("compatibility_score", { ascending: false })
+
+        if (matchesAsUser1Error) {
+          console.error("[DASHBOARD] Error fetching matches as user 1:", matchesAsUser1Error)
+        }
+
+        // Then, get matches where the user is user_id_2
+        const { data: matchesAsUser2, error: matchesAsUser2Error } = await supabase
+          .from("matches")
+          .select(`
+            *,
+            matched_profile:user_id_1 (
+              id,
+              first_name,
+              last_name,
+              avatar_url,
+              major,
+              year,
+              bio,
+              email,
+              phone,
+              instagram,
+              twitter
+            )
+          `)
+          .eq("user_id_2", user.id)
+          .order("compatibility_score", { ascending: false })
+
+        if (matchesAsUser2Error) {
+          console.error("[DASHBOARD] Error fetching matches as user 2:", matchesAsUser2Error)
+        }
+
+        // Combine both sets of matches
+        const allMatches = [...(matchesAsUser1 || []), ...(matchesAsUser2 || [])]
+        console.log("[DASHBOARD] Fetched matches:", allMatches)
+        setMatches(allMatches || [])
+      } catch (matchesErr) {
+        console.error("[DASHBOARD] Exception fetching matches:", matchesErr)
+      }
 
       // Check if user has preferences
       try {
@@ -251,6 +249,29 @@ export default function DashboardPage() {
     }
 
     checkSession()
+  }
+
+  // Format match data for the MatchCard component
+  const formatMatchData = (match) => {
+    const matchedProfile = match.matched_profile || {}
+
+    return {
+      id: match.id,
+      name: `${matchedProfile.first_name || ""} ${matchedProfile.last_name || ""}`.trim() || "Unknown User",
+      avatar:
+        matchedProfile.avatar_url ||
+        `/placeholder.svg?height=400&width=400&text=${matchedProfile.first_name?.[0] || ""}${matchedProfile.last_name?.[0] || ""}`,
+      major: matchedProfile.major || "Undeclared",
+      year: matchedProfile.year || "Unknown",
+      compatibility: Math.round(match.compatibility_score || 0),
+      bio: matchedProfile.bio || "No bio available",
+      tags: [], // We don't have tags in the current schema
+      instagram: matchedProfile.instagram,
+      twitter: matchedProfile.twitter,
+      email: matchedProfile.email || "No email available",
+      phone: matchedProfile.phone || "No phone available",
+      matchingTraits: [], // We don't have matching traits in the current schema
+    }
   }
 
   // Show loading state
@@ -357,42 +378,27 @@ export default function DashboardPage() {
 
             {/* Matches Section */}
             <section>
-              <div className="flex justify-between items-center mb-6">
+              <div className="mb-6">
                 <h2 className="text-xl font-bold text-gray-900">Your Matches</h2>
-                <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
-                  View All <ChevronRight className="ml-1 h-4 w-4" />
-                </Button>
               </div>
 
-              <Tabs defaultValue="best-matches" className="w-full">
-                <TabsList className="bg-gray-100 mb-6">
-                  <TabsTrigger value="best-matches">Best Matches</TabsTrigger>
-                  <TabsTrigger value="new">New</TabsTrigger>
-                  <TabsTrigger value="saved">Saved</TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="best-matches" className="space-y-6">
+              {matches.length > 0 ? (
+                <div className="space-y-6">
                   {matches.map((match) => (
-                    <MatchCard key={match.id} match={match} />
+                    <MatchCard key={match.id} match={formatMatchData(match)} />
                   ))}
-                </TabsContent>
-
-                <TabsContent value="new">
-                  <div className="text-center py-12 text-gray-600">
-                    <Users className="mx-auto h-12 w-12 opacity-30 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">No new matches yet</h3>
-                    <p>We're working on finding new compatible roommates for you.</p>
+                </div>
+              ) : (
+                <div className="text-center py-12 bg-white/80 backdrop-blur-md border border-gray-200 shadow-lg rounded-xl">
+                  <div className="mx-auto h-16 w-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                    <Calendar className="h-8 w-8 text-gray-500" />
                   </div>
-                </TabsContent>
-
-                <TabsContent value="saved">
-                  <div className="text-center py-12 text-gray-600">
-                    <Star className="mx-auto h-12 w-12 opacity-30 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-700 mb-2">No saved matches</h3>
-                    <p>Save potential roommates to view them here later.</p>
-                  </div>
-                </TabsContent>
-              </Tabs>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Matches will be given out on May 14th</h3>
+                  <p className="text-gray-600 max-w-md mx-auto">
+                    We're working on finding your perfect roommate matches. Check back soon!
+                  </p>
+                </div>
+              )}
             </section>
 
             {/* Upcoming Events/Reminders */}

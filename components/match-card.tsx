@@ -47,6 +47,14 @@ interface MatchCardProps {
 export function MatchCard({ match }: MatchCardProps) {
   const [expanded, setExpanded] = useState(false)
 
+  // Get initials for avatar fallback
+  const getInitials = (name: string) => {
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+  }
+
   return (
     <Card className="bg-white/80 backdrop-blur-md border-gray-200 shadow-lg overflow-hidden">
       <CardContent className="p-0">
@@ -55,12 +63,7 @@ export function MatchCard({ match }: MatchCardProps) {
             <div className="flex flex-row md:flex-col gap-4 items-center">
               <Avatar className="h-20 w-20 border-2 border-gray-200">
                 <AvatarImage src={match.avatar || "/placeholder.svg"} alt={match.name} />
-                <AvatarFallback className="bg-gray-100 text-gray-800">
-                  {match.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
+                <AvatarFallback className="bg-gray-100 text-gray-800">{getInitials(match.name)}</AvatarFallback>
               </Avatar>
 
               <div className="flex flex-col items-center">
@@ -120,14 +123,18 @@ export function MatchCard({ match }: MatchCardProps) {
               <p className="text-gray-700 mb-3">{match.bio}</p>
 
               <div className="flex flex-wrap gap-2">
-                {match.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-700 border border-gray-200"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {match.tags && match.tags.length > 0 ? (
+                  match.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-700 border border-gray-200"
+                    >
+                      {tag}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-xs text-gray-500">No tags available</span>
+                )}
               </div>
             </div>
           </div>
@@ -186,21 +193,25 @@ export function MatchCard({ match }: MatchCardProps) {
 
               <div>
                 <h4 className="text-sm font-medium text-gray-700 mb-3">Matching Traits</h4>
-                <div className="space-y-3">
-                  {match.matchingTraits.map((trait, index) => (
-                    <div key={index} className="flex items-start gap-2 text-sm">
-                      {trait.match ? (
-                        <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
-                      ) : (
-                        <XCircle className="h-4 w-4 text-gray-500 mt-0.5" />
-                      )}
-                      <div>
-                        <div className="text-gray-600">{trait.category}</div>
-                        <div className={trait.match ? "text-gray-900" : "text-gray-500"}>{trait.value}</div>
+                {match.matchingTraits && match.matchingTraits.length > 0 ? (
+                  <div className="space-y-3">
+                    {match.matchingTraits.map((trait, index) => (
+                      <div key={index} className="flex items-start gap-2 text-sm">
+                        {trait.match ? (
+                          <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
+                        ) : (
+                          <XCircle className="h-4 w-4 text-gray-500 mt-0.5" />
+                        )}
+                        <div>
+                          <div className="text-gray-600">{trait.category}</div>
+                          <div className={trait.match ? "text-gray-900" : "text-gray-500"}>{trait.value}</div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">No matching traits information available</p>
+                )}
               </div>
             </div>
           </div>
