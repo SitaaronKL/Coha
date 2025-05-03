@@ -294,16 +294,87 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Second statistic - grey background */}
-
-        {/* Third statistic - white background */}
-
-        {/* Process Comparison Section */}
+        {/* Process Comparison Section - Different layouts for mobile and desktop */}
         <section id="process-section" ref={processRef} className="py-24 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">A Better Way to Match</h2>
 
-            <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            {/* Mobile Layout (stacked) */}
+            <div className="md:hidden">
+              {/* Traditional Process Text */}
+              <motion.div
+                className="mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <h3 className="text-2xl font-bold mb-4 text-center">
+                  Traditional Process
+                  <br />4 parameters max
+                </h3>
+
+                <div className="mt-2 mb-3 text-center">
+                  <p className="text-lg mb-2">Universities typically ask:</p>
+                  <ul className="space-y-1 text-gray-700">
+                    <li>• Do you smoke?</li>
+                    <li>• Are you a night owl or early bird?</li>
+                    <li>• Do you study with music?</li>
+                    <li>• How clean is your room?</li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Traditional Process Image */}
+              <motion.div
+                className="mb-12"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+              >
+                <TraditionalMatchingVisualization />
+              </motion.div>
+
+              {/* Our Process Text */}
+              <motion.div
+                className="mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <h3 className="text-2xl font-bold mb-2 text-center">
+                  Our Process
+                  <br />
+                  256+ parameters
+                </h3>
+
+                <div className="mt-1 text-center">
+                  <p className="text-lg mb-2">Our algorithm considers:</p>
+                  <ul className="space-y-1 text-gray-700">
+                    <li>• Detailed lifestyle preferences</li>
+                    <li>• Study habits and academic goals</li>
+                    <li>• Social patterns and personality traits</li>
+                    <li>• Conflict resolution styles</li>
+                    <li>• And 250+ more parameters</li>
+                  </ul>
+                </div>
+              </motion.div>
+
+              {/* Our Process Image */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+              >
+                <CohaMatchingVisualization />
+              </motion.div>
+            </div>
+
+            {/* Desktop Layout (side by side with offset) */}
+            <div className="hidden md:grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
               {/* Old Process - Text above image */}
               <motion.div
                 className="flex flex-col items-center"
@@ -332,7 +403,7 @@ export default function Home() {
 
               {/* Our Process - Image above text */}
               <motion.div
-                className="flex flex-col items-center -mt-10"
+                className="flex flex-col items-center -mt-[100px]"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -340,7 +411,7 @@ export default function Home() {
               >
                 <CohaMatchingVisualization />
 
-                <h3 className="text-2xl font-bold mt-4 mb-2 text-center">
+                <h3 className="text-2xl font-bold mt-2 mb-2 text-center">
                   Our Process
                   <br />
                   256+ parameters
@@ -358,8 +429,6 @@ export default function Home() {
                 </div>
               </motion.div>
             </div>
-
-            {/* Removed the "Find Your Perfect Match" button as requested */}
           </div>
         </section>
 

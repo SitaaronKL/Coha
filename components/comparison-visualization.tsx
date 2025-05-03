@@ -5,9 +5,7 @@ import Image from "next/image"
 export function TraditionalMatchingVisualization() {
   return (
     <div className="w-full max-w-md">
-      <div className="relative aspect-square -mt-8">
-        {" "}
-        {/* Added -mt-5 for 20px shift up */}
+      <div className="relative aspect-square">
         <Image
           src="/images/group-2.png"
           alt="Traditional matching visualization showing multiple connections between a large circle and five dots"
@@ -24,9 +22,7 @@ export function TraditionalMatchingVisualization() {
 export function CohaMatchingVisualization() {
   return (
     <div className="w-full max-w-md">
-      <div className="relative aspect-square -mt-8">
-        {" "}
-        {/* Added -mt-5 for 20px shift up */}
+      <div className="relative aspect-square">
         <Image
           src="/images/group-1.png"
           alt="Coha matching visualization showing a single connection between a large circle and a small dot"
