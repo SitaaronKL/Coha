@@ -11,6 +11,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Inter } from "next/font/google"
 import Link from "next/link"
+// Remove this line:
+// import { ArrowLeft, Loader2, UserIcon as Male, UserIcon as Female } from 'lucide-react'
+// Replace with:
 import { ArrowLeft, Loader2 } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { debugAuthState, getCurrentUser, signIn, signUp } from "@/lib/auth"
@@ -137,19 +140,22 @@ export default function AuthPage() {
     fetchUniversities()
   }, [])
 
-  const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
-    remember: false,
-  })
-
+  // Update the signupData state to include gender
   const [signupData, setSignupData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     university: "",
+    year: "",
+    gender: "", // Add this line
     password: "",
     terms: false,
+  })
+
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+    remember: false,
   })
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,6 +186,26 @@ export default function AuthPage() {
     setSignupSuccess(null)
   }
 
+  const handleYearChange = (value: string) => {
+    setSignupData({
+      ...signupData,
+      year: value,
+    })
+    setSignupError(null) // Clear error on year change
+    setSignupSuccess(null)
+  }
+
+  // Add a handler for gender selection
+  const handleGenderSelect = (gender: string) => {
+    setSignupData({
+      ...signupData,
+      gender,
+    })
+    setSignupError(null)
+    setSignupSuccess(null)
+  }
+
+  // Update the handleSignup function to validate gender
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -251,6 +277,14 @@ export default function AuthPage() {
         throw new Error("Please select your university")
       }
 
+      if (!signupData.year) {
+        throw new Error("Please select your year")
+      }
+
+      if (!signupData.gender) {
+        throw new Error("Please select your gender")
+      }
+
       console.log("[AUTH PAGE] Signup data:", signupData)
 
       try {
@@ -258,6 +292,8 @@ export default function AuthPage() {
           firstName: signupData.firstName,
           lastName: signupData.lastName,
           university: signupData.university,
+          year: signupData.year,
+          gender: signupData.gender,
         })
 
         setSignupSuccess("Account created! Please check your email to verify your account.")
@@ -527,6 +563,70 @@ export default function AuthPage() {
                         </SelectContent>
                       </Select>
                     </div>
+
+                    {/* Add Year dropdown after university is selected */}
+                    {signupData.university && (
+                      <div className="space-y-2">
+                        <Label htmlFor="year">Year</Label>
+                        <Select value={signupData.year} onValueChange={handleYearChange}>
+                          <SelectTrigger id="year" className="w-full">
+                            <SelectValue placeholder="Select your year" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Freshman">Freshman</SelectItem>
+                            <SelectItem value="Sophomore">Sophomore</SelectItem>
+                            <SelectItem value="Junior">Junior</SelectItem>
+                            <SelectItem value="Senior">Senior</SelectItem>
+                            <SelectItem value="Graduate">Graduate</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
+
+                    {/* Replace the existing gender selection UI with this */}
+                    {signupData.year && (
+                      <div className="space-y-2">
+                        <Label className="text-gray-800">Gender</Label>
+                        <div className="flex gap-4 justify-center mt-2">
+                          <button
+                            type="button"
+                            onClick={() => handleGenderSelect("MALE")}
+                            className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                              signupData.gender === "MALE"
+                                ? "border-softblack bg-gray-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                            style={{ width: "100px" }}
+                          >
+                            <div
+                              className={`text-2xl mb-1 ${signupData.gender === "MALE" ? "text-softblack" : "text-gray-500"}`}
+                            >
+                              ♂
+                            </div>
+                            <span className={`text-sm ${signupData.gender === "MALE" ? "font-medium" : ""}`}>Male</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleGenderSelect("FEMALE")}
+                            className={`flex flex-col items-center justify-center p-3 rounded-lg border ${
+                              signupData.gender === "FEMALE"
+                                ? "border-softblack bg-gray-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                            style={{ width: "100px" }}
+                          >
+                            <div
+                              className={`text-2xl mb-1 ${signupData.gender === "FEMALE" ? "text-softblack" : "text-gray-500"}`}
+                            >
+                              ♀
+                            </div>
+                            <span className={`text-sm ${signupData.gender === "FEMALE" ? "font-medium" : ""}`}>
+                              Female
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
                     <div className="space-y-2">
                       <Label htmlFor="signupPassword" className="text-gray-800">
                         Password

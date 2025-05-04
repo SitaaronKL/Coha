@@ -12,11 +12,12 @@ const supabaseAdmin = createClient(
   },
 )
 
+// Update the POST function to handle gender
 export async function POST(request: Request) {
   try {
-    const { userId, firstName, lastName, email, university } = await request.json()
+    const { userId, firstName, lastName, email, university, year, gender } = await request.json()
 
-    if (!userId || !firstName || !lastName || !email || !university) {
+    if (!userId || !firstName || !lastName || !email || !university || !year || !gender) {
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 })
     }
 
@@ -57,6 +58,8 @@ export async function POST(request: Request) {
         last_name: lastName,
         email: email,
         university_id: universityData.id,
+        year: year,
+        gender: gender,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })

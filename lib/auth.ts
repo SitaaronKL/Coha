@@ -1,5 +1,6 @@
 import { createClientSideSupabaseClient } from "./supabase"
 
+// Update the signUp function to include gender
 export async function signUp(
   email: string,
   password: string,
@@ -7,6 +8,8 @@ export async function signUp(
     firstName: string
     lastName: string
     university: string
+    year: string
+    gender: string
   },
 ) {
   const supabase = createClientSideSupabaseClient()
@@ -52,6 +55,8 @@ export async function signUp(
         lastName: userData.lastName,
         email: email,
         university: userData.university,
+        year: userData.year,
+        gender: userData.gender,
       }),
     })
 

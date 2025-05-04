@@ -171,6 +171,8 @@ export default function QuestionnairePage() {
   const [user, setUser] = useState(null)
   const [showMBTI, setShowMBTI] = useState(false)
   const router = useRouter()
+  // Add a new state to track whether the user has started the questionnaire
+  const [hasStarted, setHasStarted] = useState(false)
 
   useEffect(() => {
     async function loadUser() {
@@ -250,6 +252,7 @@ export default function QuestionnairePage() {
   const isLastLifestyleQuestion = currentQuestion === lifestyleQuestions.length - 1 && !showMBTI
   const canProceed = answers[currentQ.id] !== undefined
 
+  // Modify the return statement to conditionally render either the intro or the questions
   return (
     <div className={`min-h-screen bg-white text-gray-900 flex flex-col ${inter.className}`}>
       <header className="border-b border-gray-200 bg-white/80 backdrop-blur-md shadow-sm">
@@ -261,9 +264,6 @@ export default function QuestionnairePage() {
             <span className="font-medium text-gray-900">Coha</span>
           </div>
           <div className="flex items-center gap-4">
-            {/* Remove this Home link section */}
-
-            {/* Profile Icon - Logged in state */}
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -297,110 +297,149 @@ export default function QuestionnairePage() {
       </header>
 
       <main className="flex-1 flex items-center justify-center p-4">
-        <Card className="w-full max-w-2xl bg-white border-gray-200 shadow-md">
-          <CardHeader>
-            <div className="flex items-center justify-between mb-2">
-              <div className="text-sm text-gray-600">
+        {!hasStarted ? (
+          // Intro screen
+          <Card className="w-full max-w-2xl bg-white border-gray-200 shadow-md">
+            <CardHeader>
+              <CardTitle className="text-2xl text-gray-900">Before You Begin</CardTitle>
+              <CardDescription className="text-gray-600">
+                A few tips to help us find your perfect roommate match
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="bg-blue-50 border border-blue-100 rounded-lg p-6">
+                <h3 className="font-semibold text-lg text-blue-800 mb-3">Be honest with your answers</h3>
+                <p className="text-blue-700 mb-4">
+                  The more honest you are, the better we can match you with compatible roommates. There are no right or
+                  wrong answers!
+                </p>
+
+                <h3 className="font-semibold text-lg text-blue-800 mb-3">Answer for who you are now</h3>
+                <p className="text-blue-700 mb-4">
+                  Answer based on how you actually are today, not how you aspire to be in college. Your authentic self
+                  will make for better matches.
+                </p>
+
+                <h3 className="font-semibold text-lg text-blue-800 mb-3">Take your time</h3>
+                <p className="text-blue-700">
+                  This questionnaire takes about 5 minutes to complete. Your answers will help us find your ideal
+                  roommate match.
+                </p>
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-center">
+              <Button onClick={() => setHasStarted(true)} className="bg-softblack hover:bg-gray-800 text-white px-8">
+                Start Questionnaire
+              </Button>
+            </CardFooter>
+          </Card>
+        ) : (
+          // Questionnaire content - keep the existing card and content
+          <Card className="w-full max-w-2xl bg-white border-gray-200 shadow-md">
+            <CardHeader>
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-sm text-gray-600">
+                  {showMBTI
+                    ? "Part 2: Personality"
+                    : `Part 1: Lifestyle (Question ${currentQuestion + 1} of ${lifestyleQuestions.length})`}
+                </div>
+              </div>
+
+              <CardTitle className="text-xl mt-4 text-gray-900">{currentQ.question}</CardTitle>
+              <CardDescription className="text-gray-600">
                 {showMBTI
-                  ? "Part 2: Personality"
-                  : `Part 1: Lifestyle (Question ${currentQuestion + 1} of ${lifestyleQuestions.length})`}
-              </div>
-            </div>
-
-            <CardTitle className="text-xl mt-4 text-gray-900">{currentQ.question}</CardTitle>
-            <CardDescription className="text-gray-600">
-              {showMBTI
-                ? "Select your Myers-Briggs personality type to help us find compatible roommates"
-                : "Select the option that best describes your preference"}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {showMBTI ? (
-              <div className="space-y-6">
-                {mbtiQuestion.categories.map((category) => (
-                  <div key={category.name} className="space-y-3">
-                    <h3 className="font-medium text-lg">{category.name}</h3>
-                    <p className="text-sm text-gray-600">{category.description}</p>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                      {category.options.map((option) => (
-                        <button
-                          key={option.id}
-                          onClick={() => handleOptionSelect(option.id)}
-                          className={cn(
-                            "p-3 rounded-md text-center transition-colors mbti-button",
-                            category.color,
-                            answers[mbtiQuestion.id] === option.id ? "ring-2 ring-offset-2 ring-black selected" : "",
-                          )}
-                        >
-                          <div className={`font-medium metallic-text ${category.metallicClass}`}>{option.text}</div>
-                          <div className="text-xs text-white opacity-90 mt-1">{option.id}</div>
-                        </button>
-                      ))}
+                  ? "Select your Myers-Briggs personality type to help us find compatible roommates"
+                  : "Select the option that best describes your preference"}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {showMBTI ? (
+                <div className="space-y-6">
+                  {mbtiQuestion.categories.map((category) => (
+                    <div key={category.name} className="space-y-3">
+                      <h3 className="font-medium text-lg">{category.name}</h3>
+                      <p className="text-sm text-gray-600">{category.description}</p>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                        {category.options.map((option) => (
+                          <button
+                            key={option.id}
+                            onClick={() => handleOptionSelect(option.id)}
+                            className={cn(
+                              "p-3 rounded-md text-center transition-colors mbti-button",
+                              category.color,
+                              answers[mbtiQuestion.id] === option.id ? "ring-2 ring-offset-2 ring-black selected" : "",
+                            )}
+                          >
+                            <div className={`font-medium metallic-text ${category.metallicClass}`}>{option.text}</div>
+                            <div className="text-xs text-white opacity-90 mt-1">{option.id}</div>
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <RadioGroup value={answers[currentQ.id] || ""} onValueChange={handleOptionSelect} className="space-y-3">
-                {currentQ.options.map((option) => (
-                  <div
-                    key={option.id}
-                    className={`flex items-center space-x-2 rounded-lg border p-4 transition-colors ${
-                      answers[currentQ.id] === option.id
-                        ? "border-black bg-black/5"
-                        : "border-gray-200 hover:border-gray-400"
-                    }`}
-                  >
-                    <RadioGroupItem value={option.id} id={`option-${option.id}`} className="text-black" />
-                    <Label htmlFor={`option-${option.id}`} className="flex-1 cursor-pointer text-gray-800">
-                      {option.text}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
-            )}
-          </CardContent>
-          <CardFooter className="flex justify-between border-t border-gray-200 pt-6">
-            <Button
-              variant="outline"
-              onClick={handlePrevious}
-              disabled={(currentQuestion === 0 && !showMBTI) || isLoading}
-              className="border-gray-300 text-gray-700 hover:bg-gray-100"
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              Previous
-            </Button>
+                  ))}
+                </div>
+              ) : (
+                <RadioGroup value={answers[currentQ.id] || ""} onValueChange={handleOptionSelect} className="space-y-3">
+                  {currentQ.options.map((option) => (
+                    <div
+                      key={option.id}
+                      className={`flex items-center space-x-2 rounded-lg border p-4 transition-colors ${
+                        answers[currentQ.id] === option.id
+                          ? "border-black bg-black/5"
+                          : "border-gray-200 hover:border-gray-400"
+                      }`}
+                    >
+                      <RadioGroupItem value={option.id} id={`option-${option.id}`} className="text-black" />
+                      <Label htmlFor={`option-${option.id}`} className="flex-1 cursor-pointer text-gray-800">
+                        {option.text}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              )}
+            </CardContent>
+            <CardFooter className="flex justify-between border-t border-gray-200 pt-6">
+              <Button
+                variant="outline"
+                onClick={handlePrevious}
+                disabled={(currentQuestion === 0 && !showMBTI) || isLoading}
+                className="border-gray-300 text-gray-700 hover:bg-gray-100"
+              >
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Previous
+              </Button>
 
-            {showMBTI ? (
-              <Button
-                onClick={handleSubmit}
-                disabled={!answers[mbtiQuestion.id] || isLoading}
-                className="bg-softblack hover:bg-gray-800 text-white"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    Submit
-                    <Check className="ml-2 h-4 w-4" />
-                  </>
-                )}
-              </Button>
-            ) : (
-              <Button
-                onClick={handleNext}
-                disabled={!canProceed || isLoading}
-                className="bg-softblack hover:bg-gray-800 text-white"
-              >
-                {isLastLifestyleQuestion ? "Continue to Part 2" : "Next"}
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            )}
-          </CardFooter>
-        </Card>
+              {showMBTI ? (
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!answers[mbtiQuestion.id] || isLoading}
+                  className="bg-softblack hover:bg-gray-800 text-white"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      Submit
+                      <Check className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleNext}
+                  disabled={!canProceed || isLoading}
+                  className="bg-softblack hover:bg-gray-800 text-white"
+                >
+                  {isLastLifestyleQuestion ? "Continue to Part 2" : "Next"}
+                  <ChevronRight className="ml-2 h-4 w-4" />
+                </Button>
+              )}
+            </CardFooter>
+          </Card>
+        )}
       </main>
 
       <footer className="py-6 border-t border-gray-200">
