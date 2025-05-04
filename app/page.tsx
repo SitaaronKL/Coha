@@ -333,8 +333,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
-                 <CohaMatchingVisualization />
-               
+                <CohaMatchingVisualization />
               </motion.div>
 
               {/* Our Process Text */}
@@ -475,7 +474,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-gray-100 border-t border-gray-200 py-12 relative z-10">
         <div className="container mx-auto px-4 max-w-5xl">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-md bg-softblack flex items-center justify-center text-white font-semibold">
@@ -520,43 +519,13 @@ export default function Home() {
               <h4 className="font-medium mb-3 text-gray-900">Support</h4>
               <ul className="space-y-2">
                 <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-                    Help Center
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-                    Safety Tips
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
+                  <a href="mailto:admin@coha.club" className="text-sm text-gray-600 hover:text-gray-900">
                     Contact Us
-                  </Link>
+                  </a>
                 </li>
                 <li>
                   <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
                     FAQ
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium mb-3 text-gray-900">Legal</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-                    Terms of Service
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="text-sm text-gray-600 hover:text-gray-900">
-                    Cookie Policy
                   </Link>
                 </li>
               </ul>
