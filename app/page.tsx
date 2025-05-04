@@ -333,7 +333,8 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
-                <TraditionalMatchingVisualization />
+                 <CohaMatchingVisualization />
+               
               </motion.div>
 
               {/* Our Process Text */}
@@ -369,7 +370,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                <CohaMatchingVisualization />
+                <TraditionalMatchingVisualization />
               </motion.div>
             </div>
 
@@ -394,7 +395,6 @@ export default function Home() {
                     <li>• Do you smoke?</li>
                     <li>• Are you a night owl or early bird?</li>
                     <li>• Do you study with music?</li>
-                    <li>• How clean is your room?</li>
                   </ul>
                 </div>
 
