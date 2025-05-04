@@ -14,6 +14,31 @@ export const metadata: Metadata = {
     ],
     apple: "/favicon.png",
   },
+  // Add Open Graph metadata for rich link previews
+  openGraph: {
+    title: "Coha - Find Your Perfect College Roommate",
+    description: "Match with compatible roommates based on lifestyle, study habits, and personality traits.",
+    url: "https://coha.club",
+    siteName: "Coha",
+    images: [
+      {
+        url: "/og-image.jpg", // Using the new image
+        width: 1200,
+        height: 630,
+        alt: "Coha - Find your perfect college roommate match",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  // Add Twitter card metadata
+  twitter: {
+    card: "summary_large_image",
+    title: "Coha - Find Your Perfect College Roommate",
+    description: "Match with compatible roommates based on lifestyle, study habits, and personality traits.",
+    images: ["/og-image.jpg"], // Using the new image
+    creator: "@cohaapp",
+  },
     generator: 'v0.dev'
 }
 
@@ -28,6 +53,16 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.png" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/favicon.png" />
+        {/* Add explicit Open Graph tags for better compatibility */}
+        <meta property="og:title" content="Coha - Find Your Perfect College Roommate" />
+        <meta
+          property="og:description"
+          content="Match with compatible roommates based on lifestyle, study habits, and personality traits."
+        />
+        <meta property="og:image" content="https://coha.club/og-image.jpg" />
+        <meta property="og:url" content="https://coha.club" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Coha" />
       </head>
       <body>
         <AuthProvider>{children}</AuthProvider>
