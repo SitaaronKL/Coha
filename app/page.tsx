@@ -311,7 +311,7 @@ export default function Home() {
               >
                 <h3 className="text-2xl font-bold mb-4 text-center">
                   Traditional Process
-                  <br />4 parameters max
+                  <br />4~ parameters
                 </h3>
 
                 <div className="mt-2 mb-3 text-center">
