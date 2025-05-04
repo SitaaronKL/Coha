@@ -215,6 +215,14 @@ export default function DashboardPage() {
     return diffDays > 0 ? `${diffDays} days remaining` : "Deadline passed"
   }
 
+  // Convert gender text to symbol
+  const getGenderSymbol = (gender: string | null | undefined) => {
+    if (!gender) return ""
+    if (gender.toUpperCase() === "MALE") return "♂"
+    if (gender.toUpperCase() === "FEMALE") return "♀"
+    return ""
+  }
+
   // Handle navigation to profile page
   const handleProfileClick = (e) => {
     e.preventDefault()
@@ -329,7 +337,16 @@ export default function DashboardPage() {
                   <h1 className="text-2xl font-bold text-gray-900">Welcome back, {profile?.first_name || "User"}</h1>
                   <p className="text-gray-600">
                     {profile?.major || "Major"} • {profile?.year || "Year"} •{" "}
-                    {profile?.universities?.name || "University"}
+                    {profile?.gender ? (
+                      <span className="inline-flex items-center">
+                        <span className="font-semibold text-lg" aria-label={profile.gender}>
+                          {getGenderSymbol(profile.gender)}
+                        </span>
+                      </span>
+                    ) : (
+                      ""
+                    )}{" "}
+                    • {profile?.universities?.name || "University"}
                   </p>
 
                   <div className="flex flex-wrap gap-2 mt-3">
