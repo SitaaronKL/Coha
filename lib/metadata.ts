@@ -30,6 +30,7 @@ export function generateMetadata(options: GenerateMetadataOptions): Metadata {
 
   const url = `https://coha.club${path}`
   const fullTitle = title === "Coha" ? title : `${title} | Coha`
+  const ogTitle = title === "Coha" ? "Find Your Perfect College Roommate" : title
 
   return {
     title: fullTitle,
@@ -42,7 +43,7 @@ export function generateMetadata(options: GenerateMetadataOptions): Metadata {
       apple: "/favicon.png",
     },
     openGraph: {
-      title: fullTitle,
+      title: ogTitle,
       description,
       url,
       siteName: "Coha",
@@ -59,7 +60,7 @@ export function generateMetadata(options: GenerateMetadataOptions): Metadata {
     },
     twitter: {
       card: "summary_large_image",
-      title: fullTitle,
+      title: ogTitle,
       description,
       images: [image],
       creator: "@cohaapp",
