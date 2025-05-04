@@ -6,17 +6,13 @@ let supabaseInstance = null
 // Create a singleton instance of the Supabase client
 export const createClientSideSupabaseClient = () => {
   if (supabaseInstance) {
-    console.log("[SUPABASE] Returning existing Supabase instance")
     return supabaseInstance
   }
-
-  console.log("[SUPABASE] Creating new Supabase client")
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL as string
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    console.error("[SUPABASE] Missing Supabase environment variables")
     throw new Error("Missing Supabase environment variables")
   }
 
@@ -82,15 +78,7 @@ export const createClientSideSupabaseClient = () => {
   })
 
   // Add event listeners for auth state changes
-  supabaseInstance.auth.onAuthStateChange((event, session) => {
-    console.log("[SUPABASE] Auth state changed:", event)
-    console.log("[SUPABASE] Session present:", !!session)
-
-    if (session) {
-      console.log("[SUPABASE] User ID:", session.user.id)
-      console.log("[SUPABASE] Session expires:", new Date(session.expires_at * 1000).toISOString())
-    }
-  })
+  supabaseInstance.auth.onAuthStateChange((event, session) => {})
 
   return supabaseInstance
 }
@@ -106,18 +94,13 @@ export const checkSupabaseConfig = () => {
       .select("count", { count: "exact", head: true })
       .then(({ count, error }) => {
         if (error) {
-          console.error("[SUPABASE CONFIG] Query error:", error)
         } else {
-          console.log("[SUPABASE CONFIG] Connection successful, profile count:", count)
         }
       })
-      .catch((err) => {
-        console.error("[SUPABASE CONFIG] Query exception:", err)
-      })
+      .catch((err) => {})
 
     return true
   } catch (error) {
-    console.error("[SUPABASE CONFIG] Configuration error:", error)
     return false
   }
 }

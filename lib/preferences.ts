@@ -96,7 +96,6 @@ export async function hasCompletedQuestionnaire(userId: string) {
     // Consider questionnaire complete if at least 5 preferences are filled
     return filledPreferences.length >= 5
   } catch (error) {
-    console.error("Error checking questionnaire completion:", error)
     return false
   }
 }

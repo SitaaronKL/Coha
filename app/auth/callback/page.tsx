@@ -29,7 +29,6 @@ export default function AuthCallback() {
         // Redirect to the confirmation page
         router.replace("/auth/confirmed")
       } catch (error) {
-        console.error("Error processing auth callback:", error)
         // Even if there's an error, redirect to the confirmation page
         router.replace("/auth/confirmed")
       }

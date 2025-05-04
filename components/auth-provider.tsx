@@ -36,14 +36,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Check for existing session
     const checkSession = async () => {
       try {
-        console.log("[AUTH PROVIDER] Checking for existing session")
         const { data, error } = await supabase.auth.getSession()
 
         if (error) {
           console.error("[AUTH PROVIDER] Session error:", error)
           setError(error)
         } else {
-          console.log("[AUTH PROVIDER] Session found:", !!data.session)
           setSession(data.session)
           setUser(data.session?.user || null)
         }
@@ -59,14 +57,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Listen for auth changes
     const { data: authListener } = supabase.auth.onAuthStateChange((event, newSession) => {
-      console.log("[AUTH PROVIDER] Auth state change:", event)
-
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
-        console.log("[AUTH PROVIDER] User signed in or token refreshed")
         setSession(newSession)
         setUser(newSession?.user || null)
       } else if (event === "SIGNED_OUT") {
-        console.log("[AUTH PROVIDER] User signed out")
         setSession(null)
         setUser(null)
       }

@@ -9,12 +9,6 @@ export async function GET(request: Request) {
     const supabaseUrl = process.env.SUPABASE_URL as string
     const supabaseKey = process.env.SUPABASE_ANON_KEY as string
 
-    // Log the cookies for debugging
-    console.log(
-      "Cookies in profile API:",
-      cookieStore.getAll().map((c) => c.name),
-    )
-
     const supabase = createClient(supabaseUrl, supabaseKey, {
       auth: {
         cookieStore,
@@ -27,16 +21,12 @@ export async function GET(request: Request) {
     } = await supabase.auth.getSession()
 
     if (sessionError) {
-      console.error("Session error in profile API:", sessionError)
       return NextResponse.json({ success: false, error: "Session error" }, { status: 500 })
     }
 
     if (!session) {
-      console.log("No session found in profile API")
       return NextResponse.json({ success: false, error: "Not authenticated" }, { status: 401 })
     }
-
-    console.log("Session found in profile API, user ID:", session.user.id)
 
     const userId = session.user.id
 
@@ -54,7 +44,6 @@ export async function GET(request: Request) {
       .single()
 
     if (profileError) {
-      console.error("Error fetching profile:", profileError)
       return NextResponse.json({ success: false, error: profileError.message }, { status: 500 })
     }
 
@@ -66,7 +55,6 @@ export async function GET(request: Request) {
       .maybeSingle()
 
     if (preferencesError && preferencesError.code !== "PGRST116") {
-      console.error("Error fetching preferences:", preferencesError)
       // Continue anyway as this is not critical
     }
 
@@ -78,7 +66,6 @@ export async function GET(request: Request) {
       .maybeSingle()
 
     if (privacyError && privacyError.code !== "PGRST116") {
-      console.error("Error fetching privacy settings:", privacyError)
       // Continue anyway as this is not critical
     }
 
@@ -89,7 +76,6 @@ export async function GET(request: Request) {
       privacySettings: privacySettings || null,
     })
   } catch (error) {
-    console.error("Error in profile API:", error)
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 })
   }
 }

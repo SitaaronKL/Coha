@@ -234,7 +234,7 @@ export default function Home() {
               transition={{ duration: 0.56, delay: 1.75 }} // 30% faster (from 0.8s to 0.56s, delay from 2.5s to 1.75s)
             >
               <p className="text-xl md:text-2xl text-gray-600 mt-6 max-w-md mx-auto">
-                Find your perfect college roommate match
+                The First AI Roommate Matching Platform for Rutgers
               </p>
             </motion.div>
           </div>
@@ -271,7 +271,7 @@ export default function Home() {
               <div className="bg-gray-50 rounded-xl p-4 md:p-8 shadow-sm flex items-center justify-center">
                 <div className="text-center">
                   <TypedText
-                    text="50.1% of women and 44.1% of men reported 'frequent' or 'occasional' conflict with roommates"
+                    text="Save hundreds of hours of cold messaging people"
                     className="text-lg md:text-xl font-bold leading-relaxed"
                   />
                   <p className="text-sm text-gray-500 mt-2">Nationwide survey of 31,500 students</p>

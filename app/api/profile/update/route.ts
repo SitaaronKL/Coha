@@ -9,12 +9,6 @@ export async function POST(request: Request) {
     const supabaseUrl = process.env.SUPABASE_URL as string
     const supabaseKey = process.env.SUPABASE_ANON_KEY as string
 
-    // Log the cookies for debugging
-    console.log(
-      "Cookies in profile update API:",
-      cookieStore.getAll().map((c) => c.name),
-    )
-
     const supabase = createClient(supabaseUrl, supabaseKey, {
       auth: {
         cookieStore,
@@ -27,16 +21,12 @@ export async function POST(request: Request) {
     } = await supabase.auth.getSession()
 
     if (sessionError) {
-      console.error("Session error in profile update API:", sessionError)
       return NextResponse.json({ success: false, error: "Session error" }, { status: 500 })
     }
 
     if (!session) {
-      console.log("No session found in profile update API")
       return NextResponse.json({ success: false, error: "Not authenticated" }, { status: 401 })
     }
-
-    console.log("Session found in profile update API, user ID:", session.user.id)
 
     const userId = session.user.id
     const { profileData, preferencesData, privacyData } = await request.json()
@@ -62,7 +52,6 @@ export async function POST(request: Request) {
         .select()
 
       if (error) {
-        console.error("Error updating profile:", error)
         return NextResponse.json({ success: false, error: error.message }, { status: 500 })
       }
 
@@ -80,7 +69,6 @@ export async function POST(request: Request) {
         .maybeSingle()
 
       if (checkError && checkError.code !== "PGRST116") {
-        console.error("Error checking preferences:", checkError)
         return NextResponse.json({ success: false, error: checkError.message }, { status: 500 })
       }
 
@@ -119,7 +107,6 @@ export async function POST(request: Request) {
       }
 
       if (error) {
-        console.error("Error updating preferences:", error)
         return NextResponse.json({ success: false, error: error.message }, { status: 500 })
       }
 
@@ -137,7 +124,6 @@ export async function POST(request: Request) {
         .maybeSingle()
 
       if (checkError && checkError.code !== "PGRST116") {
-        console.error("Error checking privacy settings:", checkError)
         return NextResponse.json({ success: false, error: checkError.message }, { status: 500 })
       }
 
@@ -168,7 +154,6 @@ export async function POST(request: Request) {
       }
 
       if (error) {
-        console.error("Error updating privacy settings:", error)
         return NextResponse.json({ success: false, error: error.message }, { status: 500 })
       }
 
@@ -182,7 +167,6 @@ export async function POST(request: Request) {
       privacySettings: privacyResult,
     })
   } catch (error) {
-    console.error("Error in profile update API:", error)
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 })
   }
 }

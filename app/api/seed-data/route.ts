@@ -86,7 +86,6 @@ export async function GET() {
       added: universitiesToAdd.length,
     })
   } catch (error) {
-    console.error("Error seeding database:", error)
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 }

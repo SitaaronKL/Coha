@@ -125,7 +125,6 @@ export async function GET() {
 
     return NextResponse.json({ success: true, message: "Database schema created successfully" })
   } catch (error) {
-    console.error("Error creating schema:", error)
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   }
 }

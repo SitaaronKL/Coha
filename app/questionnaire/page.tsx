@@ -316,14 +316,14 @@ export default function QuestionnairePage() {
 
                 <h3 className="font-semibold text-lg text-blue-800 mb-3">Answer for who you are now</h3>
                 <p className="text-blue-700 mb-4">
-                  Answer based on how you actually are today, not how you aspire to be in college. Your authentic self
+                  Answer based on how you actually are today, save the new years resolutions for later. Your authentic self
                   will make for better matches.
                 </p>
 
                 <h3 className="font-semibold text-lg text-blue-800 mb-3">Take your time</h3>
                 <p className="text-blue-700">
                   This questionnaire takes about 5 minutes to complete. Your answers will help us find your ideal
-                  roommate match.
+                  roommate options.
                 </p>
               </div>
             </CardContent>

@@ -45,9 +45,7 @@ export function DashboardNav({ user: initialUser }: DashboardNavProps) {
           if (data.success && data.profile) {
             setUser(data.profile)
           }
-        } catch (error) {
-          console.error("Error fetching user data:", error)
-        }
+        } catch (error) {}
       }
       fetchUser()
     }
@@ -113,7 +111,6 @@ export function DashboardNav({ user: initialUser }: DashboardNavProps) {
                 await fetch("/api/auth/signout")
                 window.location.href = "/"
               } catch (error) {
-                console.error("Error signing out:", error)
                 window.location.href = "/"
               }
             }}

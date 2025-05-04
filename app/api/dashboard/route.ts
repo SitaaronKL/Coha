@@ -40,7 +40,6 @@ export async function GET(request: Request) {
       .single()
 
     if (profileError) {
-      console.error("Error fetching profile:", profileError)
       return NextResponse.json({ success: false, error: profileError.message }, { status: 500 })
     }
 
@@ -52,7 +51,6 @@ export async function GET(request: Request) {
       .order("deadline_date", { ascending: true })
 
     if (deadlinesError) {
-      console.error("Error fetching deadlines:", deadlinesError)
       // Continue anyway as this is not critical
     }
 
@@ -67,7 +65,6 @@ export async function GET(request: Request) {
       matches,
     })
   } catch (error) {
-    console.error("Error in dashboard API:", error)
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 })
   }
 }
