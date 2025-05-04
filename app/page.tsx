@@ -446,14 +446,14 @@ export default function Home() {
             {/* Timeline visualization */}
             <div className="relative max-w-5xl mx-auto mb-16">
               {/* Timeline line */}
-              <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-gray-300"></div>
+              <div className="absolute left-4 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-gray-300"></div>
 
               {/* Timeline items */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* May 1-20 */}
                 <div className="md:col-start-1 md:text-right relative pb-12">
-                  <div className="md:pr-12">
-                    <div className="absolute right-0 md:right-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
+                  <div className="pl-12 md:pl-0 md:pr-12">
+                    <div className="absolute left-0 md:left-auto md:right-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
                     <h3 className="text-xl font-bold text-gray-900">May 1 - May 20</h3>
                     <p className="text-gray-700 mt-2">User onboarding period</p>
                     <p className="text-gray-600 mt-1">Create your profile and complete the questionnaire</p>
@@ -468,7 +468,7 @@ export default function Home() {
 
                 {/* May 20 */}
                 <div className="md:col-start-2 relative pb-12">
-                  <div className="md:pl-12">
+                  <div className="pl-12 md:pl-12">
                     <div className="absolute left-0 md:left-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
                     <h3 className="text-xl font-bold text-gray-900">May 20</h3>
                     <p className="text-gray-700 mt-2">Matching period begins</p>
@@ -478,8 +478,8 @@ export default function Home() {
 
                 {/* June 13 */}
                 <div className="md:col-start-1 md:text-right relative">
-                  <div className="md:pr-12">
-                    <div className="absolute right-0 md:right-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
+                  <div className="pl-12 md:pl-0 md:pr-12">
+                    <div className="absolute left-0 md:left-auto md:right-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
                     <h3 className="text-xl font-bold text-gray-900">June 13</h3>
                     <p className="text-gray-700 mt-2">Housing deadline</p>
                     <p className="text-gray-600 mt-1">Final day to submit housing preferences</p>
