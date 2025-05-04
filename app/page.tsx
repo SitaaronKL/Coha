@@ -249,10 +249,10 @@ export default function Home() {
               <div className="bg-gray-50 rounded-xl p-4 md:p-8 shadow-sm flex items-center justify-center">
                 <div className="text-center">
                   <TypedText
-                    text="Compatible roommates show 37% lower rates of depression symptoms"
+                    text="Save hundreds of hours of cold messaging people"
                     className="text-lg md:text-xl font-bold leading-relaxed"
                   />
-                  <p className="text-sm text-gray-500 mt-2">Journal of College Student Psychotherapy, 2020</p>
+                  <p className="text-sm text-gray-500 mt-2"> Based on personal experience...</p>
                 </div>
               </div>
 
@@ -271,10 +271,10 @@ export default function Home() {
               <div className="bg-gray-50 rounded-xl p-4 md:p-8 shadow-sm flex items-center justify-center">
                 <div className="text-center">
                   <TypedText
-                    text="Save hundreds of hours of cold messaging people"
+                    text="Compatible roommates show 37% lower rates of depression symptoms"
                     className="text-lg md:text-xl font-bold leading-relaxed"
                   />
-                  <p className="text-sm text-gray-500 mt-2">Nationwide survey of 31,500 students</p>
+                  <p className="text-sm text-gray-500 mt-2">Journal of College Student Psychotherapy, 2020</p>
                 </div>
               </div>
 
@@ -315,12 +315,11 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-2 mb-3 text-center">
-                  <p className="text-lg mb-2">You go from 10,000 potential matches to 1 random, based on the following generic questions Universities typically ask:</p>
+                  <p className="text-lg mb-2">You go from 10,000 potential matches to 1, based of off generic questions:</p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Do you smoke?</li>
                     <li>• Are you a night owl or early bird?</li>
                     <li>• Do you study with music?</li>
-                    <li>• How clean is your room?</li>
                   </ul>
                 </div>
               </motion.div>
@@ -351,7 +350,7 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-1 text-center">
-                  <p className="text-lg mb-2">You go from 10,000 matches to 5 curated choices based on our algorithm that considers:</p>
+                  <p className="text-lg mb-2">You go from 10,000 matches to 5 curated options based off of our algorithm that considers:</p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Detailed lifestyle preferences</li>
                     <li>• Study habits and academic goals</li>
@@ -389,7 +388,7 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-2 mb-3 text-center">
-                  <p className="text-lg mb-2">You go from 10,000 potential matches to 1 random based off of generic questions Universities typically ask such as:</p>
+                  <p className="text-lg mb-2">You go from 10,000 potential matches to 1 random based off of generic questions like:</p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Do you smoke?</li>
                     <li>• Are you a night owl or early bird?</li>
