@@ -315,7 +315,7 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-2 mb-3 text-center">
-                  <p className="text-lg mb-2">Universities typically ask:</p>
+                  <p className="text-lg mb-2">You go from 10,000 potential matches to 1 random, based on the following generic questions Universities typically ask:</p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Do you smoke?</li>
                     <li>• Are you a night owl or early bird?</li>
@@ -351,7 +351,7 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-1 text-center">
-                  <p className="text-lg mb-2">Our algorithm considers:</p>
+                  <p className="text-lg mb-2">You go from 10,000 matches to 5 curated choices based on our algorithm that considers:</p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Detailed lifestyle preferences</li>
                     <li>• Study habits and academic goals</li>
@@ -389,7 +389,7 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-2 mb-3 text-center">
-                  <p className="text-lg mb-2">Universities typically ask:</p>
+                  <p className="text-lg mb-2">You go from 10,000 potential matches to 1 random based off of generic questions Universities typically ask such as:</p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Do you smoke?</li>
                     <li>• Are you a night owl or early bird?</li>
@@ -417,7 +417,7 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-1 text-center">
-                  <p className="text-lg mb-2">Our algorithm considers:</p>
+                  <p className="text-lg mb-2">You go from 10,000 potential matches to 5 curated options based off of our algorithm that considers:</p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Detailed lifestyle preferences</li>
                     <li>• Study habits and academic goals</li>
@@ -455,7 +455,7 @@ export default function Home() {
                         className="w-full bg-white/90 border-gray-300"
                       />
                       <p className="text-xs text-gray-500 mt-2">
-                        We only accept .edu email addresses to ensure a safe community
+                        We only accept verified email addresses to ensure a safe community
                       </p>
                     </div>
                     <Button className="w-full bg-softblack hover:bg-gray-800 text-white" asChild>
