@@ -311,11 +311,14 @@ export default function Home() {
               >
                 <h3 className="text-2xl font-bold mb-4 text-center">
                   Traditional Process
-                  <br />4~ parameters
+                  <br />
+                  4~ parameters
                 </h3>
 
                 <div className="mt-2 mb-3 text-center">
-                  <p className="text-lg mb-2">You go from 10,000 potential matches to 1, based of off generic questions:</p>
+                  <p className="text-lg mb-2">
+                    You go from 10,000 potential matches to 1, based of off generic questions:
+                  </p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Do you smoke?</li>
                     <li>• Are you a night owl or early bird?</li>
@@ -350,7 +353,9 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-1 text-center">
-                  <p className="text-lg mb-2">You go from 10,000 matches to 5 curated options based off of our algorithm that considers:</p>
+                  <p className="text-lg mb-2">
+                    You go from 10,000 matches to 5 curated options based off of our algorithm that considers:
+                  </p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Detailed lifestyle preferences</li>
                     <li>• Study habits and academic goals</li>
@@ -388,7 +393,9 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-2 mb-3 text-center">
-                  <p className="text-lg mb-2">You go from 10,000 potential matches to 1 random based off of generic questions like:</p>
+                  <p className="text-lg mb-2">
+                    You go from 10,000 potential matches to 1 random based off of generic questions like:
+                  </p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Do you smoke?</li>
                     <li>• Are you a night owl or early bird?</li>
@@ -416,7 +423,9 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-1 text-center">
-                  <p className="text-lg mb-2">You go from 10,000 potential matches to 5 curated options based off of our algorithm that considers:</p>
+                  <p className="text-lg mb-2">
+                    You go from 10,000 potential matches to 5 curated options based off of our algorithm that considers:
+                  </p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Detailed lifestyle preferences</li>
                     <li>• Study habits and academic goals</li>
@@ -426,6 +435,102 @@ export default function Home() {
                   </ul>
                 </div>
               </motion.div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">Our Timeline</h2>
+
+            {/* Timeline visualization */}
+            <div className="relative max-w-5xl mx-auto mb-16">
+              {/* Timeline line */}
+              <div className="absolute left-0 md:left-1/2 transform md:-translate-x-1/2 h-full w-1 bg-gray-300"></div>
+
+              {/* Timeline items */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* May 1-20 */}
+                <div className="md:col-start-1 md:text-right relative pb-12">
+                  <div className="md:pr-12">
+                    <div className="absolute right-0 md:right-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
+                    <h3 className="text-xl font-bold text-gray-900">May 1 - May 20</h3>
+                    <p className="text-gray-700 mt-2">User onboarding period</p>
+                    <p className="text-gray-600 mt-1">Create your profile and complete the questionnaire</p>
+                  </div>
+                </div>
+
+                {/* Empty space for first item on mobile */}
+                <div className="hidden md:block"></div>
+
+                {/* Empty space for second item on mobile */}
+                <div className="hidden md:block"></div>
+
+                {/* May 20 */}
+                <div className="md:col-start-2 relative pb-12">
+                  <div className="md:pl-12">
+                    <div className="absolute left-0 md:left-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
+                    <h3 className="text-xl font-bold text-gray-900">May 20</h3>
+                    <p className="text-gray-700 mt-2">Matching period begins</p>
+                    <p className="text-gray-600 mt-1">Our algorithm starts pairing compatible roommates</p>
+                  </div>
+                </div>
+
+                {/* June 13 */}
+                <div className="md:col-start-1 md:text-right relative">
+                  <div className="md:pr-12">
+                    <div className="absolute right-0 md:right-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
+                    <h3 className="text-xl font-bold text-gray-900">June 13</h3>
+                    <p className="text-gray-700 mt-2">Housing deadline</p>
+                    <p className="text-gray-600 mt-1">Final day to submit housing preferences</p>
+                  </div>
+                </div>
+
+                <div className="hidden md:block"></div>
+              </div>
+            </div>
+
+            {/* Promotional box with gold/bronze styling */}
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-white rounded-xl p-8 shadow-lg border border-amber-100 relative overflow-hidden">
+                {/* Subtle gold gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-50 to-amber-100 opacity-50"></div>
+
+                <div className="relative z-10">
+                  {/* Policy & Features */}
+                  <div className="text-center max-w-2xl mx-auto">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Early Access</h3>
+                    <p className="text-lg font-medium text-amber-800 mb-6">
+                      <span className="line-through mr-2">$20 Launch</span>
+                      <span className="text-green-700">$0 First 1000 users are FREE</span>
+                    </p>
+
+                    <div className="mt-6">
+                      <h4 className="font-semibold text-gray-800 mb-4">Our policy & features include:</h4>
+                      <ul className="space-y-3 max-w-lg mx-auto text-left">
+                        <li className="flex items-start">
+                          <span className="text-amber-700 mr-2">•</span>
+                          <span>Research-backed lifestyle + personality quotient</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-amber-700 mr-2">•</span>
+                          <span>Peer to algorithm matching</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-amber-700 mr-2">•</span>
+                          <span>Verified users only</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-amber-700 mr-2">•</span>
+                          <span>1-5 optimized matches</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
