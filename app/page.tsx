@@ -589,6 +589,11 @@ export default function Home() {
                     FAQ
                   </Link>
                 </li>
+                <li>
+                  <Link href="/team" className="text-sm text-gray-600 hover:text-gray-900">
+                    Who We Are
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
