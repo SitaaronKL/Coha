@@ -317,7 +317,7 @@ export default function Home() {
 
                 <div className="mt-2 mb-3 text-center">
                   <p className="text-lg mb-2">
-                    You go from 10,000 potential matches to 1, based of off generic questions:
+                    Go from 10000 potential matches to 1, based of off generic questions:
                   </p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Do you smoke?</li>
@@ -354,10 +354,10 @@ export default function Home() {
 
                 <div className="mt-1 text-center">
                   <p className="text-lg mb-2">
-                    You go from 10,000 matches to 5 curated options based off of our algorithm that considers:
+                    Go from 10000 matches to 5 curated options based off of our algorithm that considers:
                   </p>
                   <ul className="space-y-1 text-gray-700">
-                    <li>• Detailed lifestyle preferences</li>
+                    <li>• Research-backed lifestyle & personality quotient</li>
                     <li>• Study habits and academic goals</li>
                     <li>• Social patterns and personality traits</li>
                     <li>• Conflict resolution styles</li>
