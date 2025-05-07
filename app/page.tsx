@@ -278,9 +278,9 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Fourth Quadrant - Down Arrow */}
+              {/* Fourth Quadrant - Down Arrow (hidden on mobile) */}
               <div
-                className="bg-softblack rounded-xl p-4 md:p-8 shadow-sm flex items-center justify-center cursor-pointer transition-transform hover:translate-y-1"
+                className="hidden md:flex bg-softblack rounded-xl p-4 md:p-8 shadow-sm items-center justify-center cursor-pointer transition-transform hover:translate-y-1"
                 onClick={() => scrollToSection(processRef)}
               >
                 <div className="text-center">
@@ -316,9 +316,7 @@ export default function Home() {
                 </h3>
 
                 <div className="mt-2 mb-3 text-center">
-                  <p className="text-lg mb-2">
-                    Go from 10000 potential matches to 1, based of off generic questions:
-                  </p>
+                  <p className="text-lg mb-2">Go from 10000 potential matches to 1, based of off generic questions:</p>
                   <ul className="space-y-1 text-gray-700">
                     <li>• Do you smoke?</li>
                     <li>• Are you a night owl or early bird?</li>
@@ -487,17 +485,6 @@ export default function Home() {
                 </div>
 
                 <div className="hidden md:block"></div>
-              </div>
-            </div>
-
-            {/* Promotional box with gold/bronze styling */}
-            <div className="max-w-4xl mx-auto text-center">
-              <div
-                className="mt-10 cursor-pointer transition-transform hover:translate-y-1 inline-block"
-                onClick={() => scrollToSection(getStartedRef)}
-              >
-                <p className="text-gray-700 font-medium mb-2">Get Started Below</p>
-                <ChevronDown className="h-10 w-10 text-gray-800 mx-auto animate-bounce" />
               </div>
             </div>
           </div>

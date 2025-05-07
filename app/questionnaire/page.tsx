@@ -316,8 +316,8 @@ export default function QuestionnairePage() {
 
                 <h3 className="font-semibold text-lg text-blue-800 mb-3">Answer for who you are now</h3>
                 <p className="text-blue-700 mb-4">
-                  Answer based on how you actually are today, save the new years resolutions for later. Your authentic self
-                  will make for better matches.
+                  Answer based on how you actually are today, save the new years resolutions for later. Your authentic
+                  self will make for better matches.
                 </p>
 
                 <h3 className="font-semibold text-lg text-blue-800 mb-3">Take your time</h3>
@@ -345,7 +345,9 @@ export default function QuestionnairePage() {
                 </div>
               </div>
 
-              <CardTitle className="text-xl mt-4 text-gray-900">{currentQ.question}</CardTitle>
+              <CardTitle className="text-xl mt-4 text-gray-900">
+                {showMBTI ? "What's your MBTI personality type?" : currentQ.question}
+              </CardTitle>
               <CardDescription className="text-gray-600">
                 {showMBTI
                   ? "Select your Myers-Briggs personality type to help us find compatible roommates"
@@ -354,31 +356,46 @@ export default function QuestionnairePage() {
             </CardHeader>
             <CardContent>
               {showMBTI ? (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {mbtiQuestion.categories.map((category) => (
-                    <div key={category.name} className="space-y-3">
-                      <h3 className="font-medium text-lg">{category.name}</h3>
-                      <p className="text-sm text-gray-600">{category.description}</p>
+                    <div key={category.name} className="space-y-2">
+                      <h3 className="font-medium text-base">{category.name}</h3>
+                      <p className="text-xs text-gray-600">{category.description}</p>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                         {category.options.map((option) => (
                           <button
                             key={option.id}
                             onClick={() => handleOptionSelect(option.id)}
                             className={cn(
-                              "p-3 rounded-md text-center transition-colors mbti-button",
+                              "p-2 rounded-md text-center transition-colors mbti-button",
                               category.color,
                               answers[mbtiQuestion.id] === option.id ? "ring-2 ring-offset-2 ring-black selected" : "",
                             )}
                           >
-                            <div className={`font-medium metallic-text ${category.metallicClass}`}>{option.text}</div>
-                            <div className="text-xs text-white opacity-90 mt-1">{option.id}</div>
+                            <div className={`font-medium text-sm metallic-text ${category.metallicClass}`}>
+                              {option.text}
+                            </div>
+                            <div className="text-xs text-white opacity-90">{option.id}</div>
                           </button>
                         ))}
                       </div>
                     </div>
                   ))}
+                  <div className="text-center mt-2 text-sm text-gray-600">
+                    Don't know your personality type?{" "}Click 
+                    <a
+                      href="https://www.16personalities.com/free-personality-test"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      here
+                    </a>{" "}
+                     to take the test and come back.
+                  </div>
                 </div>
               ) : (
+                // Rest of the code for non-MBTI questions remains the same
                 <RadioGroup value={answers[currentQ.id] || ""} onValueChange={handleOptionSelect} className="space-y-3">
                   {currentQ.options.map((option) => (
                     <div
