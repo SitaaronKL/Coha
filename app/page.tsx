@@ -11,6 +11,14 @@ import { TraditionalMatchingVisualization, CohaMatchingVisualization } from "@/c
 
 const inter = Inter({ subsets: ["latin"] })
 
+// MBTI Colors
+const MBTI_COLORS = {
+  analysts: "#8e5e9f", // Purple
+  diplomats: "#2a9d8f", // Teal
+  sentinels: "#3a86a8", // Blue
+  explorers: "#d9a404", // Gold
+}
+
 // SVG path for the letter "C"
 const C_PATH = "M60,20 C30,20 10,40 10,70 C10,100 30,120 60,120 C80,120 95,110 105,95"
 // SVG path for the letter "o" - improved to ensure no gap
@@ -23,7 +31,7 @@ const A_PATH =
   "M360,40 C330,40 310,50 310,70 C310,90 330,100 360,100 C390,100 410,90 410,70 L410,40 L410,120 M410,50 C410,45 390,40 360,40"
 
 // Component for typing animation - speed increased by 30%
-const TypedText = ({ text, className, delay = 0 }) => {
+const TypedText = ({ text, className, delay = 0, color = null }) => {
   const controls = useAnimation()
   const textRef = useRef(null)
   const isInView = useInView(textRef, { once: true, margin: "-100px" })
@@ -47,13 +55,27 @@ const TypedText = ({ text, className, delay = 0 }) => {
   }, [isInView, text])
 
   return (
-    <div ref={textRef} className={className}>
+    <div ref={textRef} className={className} style={color ? { color } : {}}>
       {displayedText}
       {displayedText.length < text.length && (
         <span className="inline-block w-1 h-5 bg-black animate-pulse ml-1">|</span>
       )}
     </div>
   )
+}
+
+// Function to get a random MBTI color
+const getRandomMBTIColor = () => {
+  const colorKeys = Object.keys(MBTI_COLORS)
+  const randomKey = colorKeys[Math.floor(Math.random() * colorKeys.length)]
+  return MBTI_COLORS[randomKey]
+}
+
+// Function to get an array of unique random MBTI colors
+const getUniqueRandomColors = (count) => {
+  const colorKeys = Object.keys(MBTI_COLORS)
+  const shuffled = [...colorKeys].sort(() => 0.5 - Math.random())
+  return shuffled.slice(0, count).map((key) => MBTI_COLORS[key])
 }
 
 export default function Home() {
@@ -64,6 +86,33 @@ export default function Home() {
   const getStartedRef = useRef(null)
   const isInView = useInView(heroRef, { once: true })
   const controls = useAnimation()
+
+  // State for random colors
+  const [letterColors, setLetterColors] = useState(["#000000", "#000000", "#000000", "#000000"])
+  const [buttonColors, setButtonColors] = useState({
+    signUp: "#000000",
+    getStarted: "#000000",
+    seeProcess: "#000000",
+    createProfile: "#000000",
+  })
+  const [statColors, setStatColors] = useState(["#000000", "#000000", "#000000"])
+
+  // Initialize random colors on page load
+  useEffect(() => {
+    // Set random colors for Coha letters
+    setLetterColors(getUniqueRandomColors(4))
+
+    // Set random colors for buttons
+    setButtonColors({
+      signUp: getRandomMBTIColor(),
+      getStarted: getRandomMBTIColor(),
+      seeProcess: getRandomMBTIColor(),
+      createProfile: getRandomMBTIColor(),
+    })
+
+    // Set random colors for stats
+    setStatColors([getRandomMBTIColor(), getRandomMBTIColor(), getRandomMBTIColor()])
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -92,10 +141,12 @@ export default function Home() {
       <header className="border-b border-gray-200/40 backdrop-blur-md bg-white/80 sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-md bg-softblack text-white flex items-center justify-center font-semibold">
-              CH
+            <div className="w-auto px-2 h-8 rounded-md bg-softblack text-white flex items-center justify-center font-semibold">
+              <span style={{ color: letterColors[0] }}>C</span>
+              <span style={{ color: letterColors[1] }}>o</span>
+              <span style={{ color: letterColors[2] }}>h</span>
+              <span style={{ color: letterColors[3] }}>a</span>
             </div>
-            <span className="font-medium">Coha</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
             <button
@@ -126,7 +177,14 @@ export default function Home() {
             >
               <Link href="/auth?tab=login">Log in</Link>
             </Button>
-            <Button size="sm" className="bg-softblack hover:bg-gray-800 text-white" asChild>
+            <Button
+              size="sm"
+              className="text-white"
+              asChild
+              style={{ backgroundColor: buttonColors.signUp, borderColor: buttonColors.signUp }}
+              onMouseOver={(e) => (e.currentTarget.style.backgroundColor = buttonColors.signUp + "dd")}
+              onMouseOut={(e) => (e.currentTarget.style.backgroundColor = buttonColors.signUp)}
+            >
               <Link href="/auth?tab=signup">Sign Up</Link>
             </Button>
           </div>
@@ -153,7 +211,7 @@ export default function Home() {
               {/* C */}
               <motion.path
                 d={C_PATH}
-                stroke="black"
+                stroke={letterColors[0]}
                 strokeWidth="10"
                 fill="transparent"
                 variants={{
@@ -172,7 +230,7 @@ export default function Home() {
               {/* o - improved path to ensure no gap */}
               <motion.path
                 d={O_PATH}
-                stroke="black"
+                stroke={letterColors[1]}
                 strokeWidth="10"
                 fill="transparent"
                 strokeLinecap="round"
@@ -193,7 +251,7 @@ export default function Home() {
               {/* h - moved closer to the "o" */}
               <motion.path
                 d={H_PATH}
-                stroke="black"
+                stroke={letterColors[2]}
                 strokeWidth="10"
                 fill="transparent"
                 variants={{
@@ -212,7 +270,7 @@ export default function Home() {
               {/* a - adjusted position */}
               <motion.path
                 d={A_PATH}
-                stroke="black"
+                stroke={letterColors[3]}
                 strokeWidth="10"
                 fill="transparent"
                 variants={{
@@ -251,6 +309,7 @@ export default function Home() {
                   <TypedText
                     text="Save hundreds of hours of cold messaging people"
                     className="text-lg md:text-xl font-bold leading-relaxed"
+                    color={statColors[0]}
                   />
                   <p className="text-sm text-gray-500 mt-2"> Based on personal experience...</p>
                 </div>
@@ -262,6 +321,7 @@ export default function Home() {
                   <TypedText
                     text="Compatible roommates expand each other's social networks by an average of 40%"
                     className="text-lg md:text-xl font-bold leading-relaxed"
+                    color={statColors[1]}
                   />
                   <p className="text-sm text-gray-500 mt-2">Social Psychology of Education, 2020</p>
                 </div>
@@ -273,6 +333,7 @@ export default function Home() {
                   <TypedText
                     text="Compatible roommates show 37% lower rates of depression symptoms"
                     className="text-lg md:text-xl font-bold leading-relaxed"
+                    color={statColors[2]}
                   />
                   <p className="text-sm text-gray-500 mt-2">Journal of College Student Psychotherapy, 2020</p>
                 </div>
@@ -280,8 +341,9 @@ export default function Home() {
 
               {/* Fourth Quadrant - Down Arrow (hidden on mobile) */}
               <div
-                className="hidden md:flex bg-softblack rounded-xl p-4 md:p-8 shadow-sm items-center justify-center cursor-pointer transition-transform hover:translate-y-1"
+                className="hidden md:flex rounded-xl p-4 md:p-8 shadow-sm items-center justify-center cursor-pointer transition-transform hover:translate-y-1"
                 onClick={() => scrollToSection(processRef)}
+                style={{ backgroundColor: buttonColors.seeProcess }}
               >
                 <div className="text-center">
                   <div className="flex flex-col items-center">
@@ -451,7 +513,10 @@ export default function Home() {
                 {/* May 1-20 */}
                 <div className="md:col-start-1 md:text-right relative pb-12">
                   <div className="pl-12 md:pl-0 md:pr-12">
-                    <div className="absolute left-0 md:left-auto md:right-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
+                    <div
+                      className="absolute left-0 md:left-auto md:right-[-8px] top-0 w-4 h-4 rounded-full border-4 border-white"
+                      style={{ backgroundColor: getRandomMBTIColor() }}
+                    ></div>
                     <h3 className="text-xl font-bold text-gray-900">May 1 - May 20</h3>
                     <p className="text-gray-700 mt-2">User onboarding period</p>
                     <p className="text-gray-600 mt-1">Create your profile and complete the questionnaire</p>
@@ -467,7 +532,10 @@ export default function Home() {
                 {/* May 20 */}
                 <div className="md:col-start-2 relative pb-12">
                   <div className="pl-12 md:pl-12">
-                    <div className="absolute left-0 md:left-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
+                    <div
+                      className="absolute left-0 md:left-[-8px] top-0 w-4 h-4 rounded-full border-4 border-white"
+                      style={{ backgroundColor: getRandomMBTIColor() }}
+                    ></div>
                     <h3 className="text-xl font-bold text-gray-900">May 20</h3>
                     <p className="text-gray-700 mt-2">Matching period begins</p>
                     <p className="text-gray-600 mt-1">Our algorithm starts pairing compatible roommates</p>
@@ -477,7 +545,10 @@ export default function Home() {
                 {/* June 13 */}
                 <div className="md:col-start-1 md:text-right relative">
                   <div className="pl-12 md:pl-0 md:pr-12">
-                    <div className="absolute left-0 md:left-auto md:right-[-8px] top-0 w-4 h-4 rounded-full bg-softblack border-4 border-white"></div>
+                    <div
+                      className="absolute left-0 md:left-auto md:right-[-8px] top-0 w-4 h-4 rounded-full border-4 border-white"
+                      style={{ backgroundColor: getRandomMBTIColor() }}
+                    ></div>
                     <h3 className="text-xl font-bold text-gray-900">June 13</h3>
                     <p className="text-gray-700 mt-2">Housing deadline</p>
                     <p className="text-gray-600 mt-1">Final day to submit housing preferences</p>
@@ -519,7 +590,13 @@ export default function Home() {
                         We only accept verified email addresses to ensure a safe community
                       </p>
                     </div>
-                    <Button className="w-full bg-softblack hover:bg-gray-800 text-white" asChild>
+                    <Button
+                      className="w-full text-white"
+                      asChild
+                      style={{ backgroundColor: buttonColors.createProfile, borderColor: buttonColors.createProfile }}
+                      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = buttonColors.createProfile + "dd")}
+                      onMouseOut={(e) => (e.currentTarget.style.backgroundColor = buttonColors.createProfile)}
+                    >
                       <Link href="/auth?tab=signup">
                         Create Your Profile <ArrowRight className="ml-2 h-4 w-4" />
                       </Link>
@@ -538,10 +615,12 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-md bg-softblack flex items-center justify-center text-white font-semibold">
-                  CH
+                <div className="w-auto px-2 h-8 rounded-md bg-softblack flex items-center justify-center font-semibold">
+                  <span style={{ color: letterColors[0] }}>C</span>
+                  <span style={{ color: letterColors[1] }}>o</span>
+                  <span style={{ color: letterColors[2] }}>h</span>
+                  <span style={{ color: letterColors[3] }}>a</span>
                 </div>
-                <span className="font-medium text-gray-900">Coha</span>
               </div>
               <p className="text-sm text-gray-600">
                 Helping university students find their ideal roommates since 2023.
