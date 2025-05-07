@@ -491,52 +491,13 @@ export default function Home() {
             </div>
 
             {/* Promotional box with gold/bronze styling */}
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-white rounded-xl p-8 shadow-lg border border-amber-100 relative overflow-hidden">
-                {/* Subtle gold gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-50 to-amber-100 opacity-50"></div>
-
-                <div className="relative z-10 text-center">
-                  {/* Policy & Features */}
-                  <div className="max-w-2xl mx-auto">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4">Early Access</h3>
-                    <p className="text-lg font-medium text-amber-800 mb-6">
-                      <span className="line-through mr-2">$20 Launch</span>
-                      <span className="text-green-700">$0 First 1000 users are FREE</span>
-                    </p>
-
-                    <div className="mt-6">
-                      <h4 className="font-semibold text-gray-800 mb-4">Our policy & features include:</h4>
-                      <ul className="space-y-3 max-w-md mx-auto text-center">
-                        <li className="flex items-center justify-center">
-                          <span className="text-amber-700 mr-2">•</span>
-                          <span>Research-backed lifestyle + personality quotient</span>
-                        </li>
-                        <li className="flex items-center justify-center">
-                          <span className="text-amber-700 mr-2">•</span>
-                          <span>Peer to algorithm matching</span>
-                        </li>
-                        <li className="flex items-center justify-center">
-                          <span className="text-amber-700 mr-2">•</span>
-                          <span>Verified users only</span>
-                        </li>
-                        <li className="flex items-center justify-center">
-                          <span className="text-amber-700 mr-2">•</span>
-                          <span>1-5 optimized matches</span>
-                        </li>
-                      </ul>
-                    </div>
-
-                    {/* Down arrow button */}
-                    <div
-                      className="mt-10 cursor-pointer transition-transform hover:translate-y-1 inline-block"
-                      onClick={() => scrollToSection(getStartedRef)}
-                    >
-                      <p className="text-gray-700 font-medium mb-2">Get Started Below</p>
-                      <ChevronDown className="h-10 w-10 text-gray-800 mx-auto animate-bounce" />
-                    </div>
-                  </div>
-                </div>
+            <div className="max-w-4xl mx-auto text-center">
+              <div
+                className="mt-10 cursor-pointer transition-transform hover:translate-y-1 inline-block"
+                onClick={() => scrollToSection(getStartedRef)}
+              >
+                <p className="text-gray-700 font-medium mb-2">Get Started Below</p>
+                <ChevronDown className="h-10 w-10 text-gray-800 mx-auto animate-bounce" />
               </div>
             </div>
           </div>
@@ -557,7 +518,9 @@ export default function Home() {
                 </h2>
                 <p className="text-lg text-gray-700 mb-8">Have a say in your roommate with Coha</p>
                 <div className="bg-white/80 backdrop-blur-md p-6 rounded-xl border border-gray-200 shadow-lg max-w-md mx-auto">
-                  <h3 className="text-lg font-medium mb-4 text-gray-900">Get started with your university email</h3>
+                  <h3 className="text-lg font-medium mb-2 text-gray-900">Early Access</h3>
+                  <p className="mb-4 font-medium text-black">First 1000 users are free</p>
+
                   <form className="space-y-4">
                     <div>
                       <Input
