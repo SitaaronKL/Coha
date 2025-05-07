@@ -573,11 +573,10 @@ export default function AuthPage() {
                             <SelectValue placeholder="Select your year" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Freshman">Freshman</SelectItem>
-                            <SelectItem value="Sophomore">Sophomore</SelectItem>
-                            <SelectItem value="Junior">Junior</SelectItem>
-                            <SelectItem value="Senior">Senior</SelectItem>
-                            <SelectItem value="Graduate">Graduate</SelectItem>
+                            <SelectItem value="Incoming Freshman">Incoming Freshman</SelectItem>
+                            <SelectItem value="Incoming Sophomore">Incoming Sophomore</SelectItem>
+                            <SelectItem value="Incoming Junior">Incoming Junior</SelectItem>
+                            <SelectItem value="Incoming Senior">Incoming Senior</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
