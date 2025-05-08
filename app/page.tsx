@@ -292,7 +292,7 @@ export default function Home() {
               transition={{ duration: 0.56, delay: 1.75 }} // 30% faster (from 0.8s to 0.56s, delay from 2.5s to 1.75s)
             >
               <p className="text-xl md:text-2xl text-gray-600 mt-6 max-w-md mx-auto">
-                The First AI Roommate Matching Platform for Rutgers
+                The First Personality Based Roommate Matching Platform
               </p>
             </motion.div>
           </div>
