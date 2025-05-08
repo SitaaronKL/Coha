@@ -3,6 +3,23 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { AuthProvider } from "@/components/auth-provider"
 
+
+import { GoogleAnalytics } from '@next/third-parties/google'
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+      <GoogleAnalytics gaId="G-R2SMXVHM1T" />
+    </html>
+  )
+}
+
+
 export const metadata: Metadata = {
   title: "Coha",
   description:
