@@ -8,7 +8,6 @@ import { ArrowRight, ChevronDown } from "lucide-react"
 import { useEffect, useState, useRef } from "react"
 import { motion, useInView, useAnimation } from "framer-motion"
 import { TraditionalMatchingVisualization, CohaMatchingVisualization } from "@/components/comparison-visualization"
-import { AnalyticsTest } from "@/components/analytics-test" // Import the test component
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -193,11 +192,6 @@ export default function Home() {
       </header>
 
       <main>
-        {/* Add the analytics test component at the top of the main content */}
-        <div className="container mx-auto px-4 py-4">
-          <AnalyticsTest />
-        </div>
-
         {/* Hero Section - Minimalist with animated text */}
         <section ref={heroRef} className="min-h-[90vh] flex flex-col items-center justify-center relative px-2">
           {" "}
