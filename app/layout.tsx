@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
 import { AuthProvider } from "@/components/auth-provider"
-import { GoogleAnalytics } from "@next/third-parties/google"
+import Script from "next/script"
 
 export const metadata: Metadata = {
   title: "Coha",
@@ -54,11 +54,23 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.png" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/favicon.png" />
-        {/* Removed duplicate Open Graph tags */}
       </head>
       <body>
         <AuthProvider>{children}</AuthProvider>
-        <GoogleAnalytics gaId="G-R2SMXVHM1T" />
+
+        {/* Google Analytics - Using next/script */}
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-R2SMXVHM1T" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-R2SMXVHM1T');
+            
+            // Debug log to confirm script execution
+            console.log('Google Analytics script loaded');
+          `}
+        </Script>
       </body>
     </html>
   )
