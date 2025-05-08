@@ -2,23 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
 import { AuthProvider } from "@/components/auth-provider"
-
-
-import { GoogleAnalytics } from '@next/third-parties/google'
- 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <body>{children}</body>
-      <GoogleAnalytics gaId="G-R2SMXVHM1T" />
-    </html>
-  )
-}
-
+import { GoogleAnalytics } from "@next/third-parties/google"
 
 export const metadata: Metadata = {
   title: "Coha",
@@ -70,10 +54,10 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.png" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/favicon.png" />
-        {/* Removed duplicate Open Graph tags */}
       </head>
       <body>
         <AuthProvider>{children}</AuthProvider>
+        <GoogleAnalytics gaId="G-R2SMXVHM1T" />
       </body>
     </html>
   )
