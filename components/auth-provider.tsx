@@ -4,7 +4,7 @@ import type React from "react"
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { createClientSideSupabaseClient } from "@/lib/supabase"
-import type { Session, User } from "@supabase/supabase-js"
+import type { Session, User } from "@supabase.supabase-js"
 
 type AuthContextType = {
   session: Session | null
@@ -56,13 +56,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkSession()
 
     // Listen for auth changes
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, newSession) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      console.log("[AUTH PROVIDER] Auth state change:", event)
+
       if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
         setSession(newSession)
         setUser(newSession?.user || null)
       } else if (event === "SIGNED_OUT") {
         setSession(null)
         setUser(null)
+      } else if (event === "USER_UPDATED") {
+        // Refresh the session to get the latest user data
+        const { data } = await supabase.auth.getSession()
+        setSession(data.session)
+        setUser(data.session?.user || null)
       }
     })
 
@@ -74,13 +81,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       const supabase = createClientSideSupabaseClient()
+
+      // First clear the session state
+      setSession(null)
+      setUser(null)
+
+      // Then sign out from Supabase
       await supabase.auth.signOut()
+      console.log("[AUTH PROVIDER] Supabase signOut called")
+
+      // Clear any auth-related cookies manually
+      document.cookie =
+        "sb-access-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=" + window.location.hostname
+      document.cookie =
+        "sb-refresh-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=" + window.location.hostname
+
+      // Small delay to ensure cookies are cleared
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      // Call the server-side signout route
+      try {
+        await fetch("/api/auth/signout", {
+          method: "GET",
+          credentials: "include",
+        })
+        console.log("[AUTH PROVIDER] Server-side signout called")
+      } catch (apiError) {
+        console.error("[AUTH PROVIDER] API signout error:", apiError)
+        // Continue with redirect even if this fails
+      }
 
       // Force hard redirect to auth page
       window.location.href = "/auth"
     } catch (err) {
       console.error("[AUTH PROVIDER] Sign out error:", err)
       setError(err instanceof Error ? err : new Error(String(err)))
+
+      // Even if there's an error, redirect to auth page
+      window.location.href = "/auth"
     }
   }
 

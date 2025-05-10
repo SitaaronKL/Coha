@@ -31,8 +31,14 @@ export async function GET(request: Request) {
       }
     }
 
+    // Create a response with cleared cookies
+    const response = NextResponse.json({ success: true })
+
+    // Explicitly clear the main auth cookies in the response
+    response.cookies.delete("sb-access-token")
+    response.cookies.delete("sb-refresh-token")
+
     // Add cache control headers to prevent caching
-    const response = NextResponse.redirect(new URL("/auth", request.url))
     response.headers.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate")
     response.headers.set("Pragma", "no-cache")
     response.headers.set("Expires", "0")
@@ -40,6 +46,6 @@ export async function GET(request: Request) {
     return response
   } catch (error) {
     console.error("Error signing out:", error)
-    return NextResponse.redirect(new URL("/auth?error=signout_failed", request.url))
+    return NextResponse.json({ success: false, error: "Failed to sign out" }, { status: 500 })
   }
 }

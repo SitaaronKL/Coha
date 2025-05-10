@@ -118,19 +118,46 @@ export async function signOut() {
   const supabase = createClientSideSupabaseClient()
 
   try {
+    // Simple direct approach - call Supabase signOut
     const { error } = await supabase.auth.signOut()
 
     if (error) {
-      console.error("[AUTH] SignOut error:", error)
+      console.error("[AUTH] Supabase signOut error:", error)
       throw error
     }
 
-    console.log("[AUTH] SignOut successful")
+    console.log("[AUTH] Supabase signOut successful")
 
-    // Use a hard redirect to auth page
+    // Clear cookies manually to be extra sure
+    document.cookie =
+      "sb-access-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=" + window.location.hostname
+    document.cookie =
+      "sb-refresh-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=" + window.location.hostname
+
+    // Small delay to ensure cookies are cleared
+    await new Promise((resolve) => setTimeout(resolve, 100))
+
+    // Use the server-side signout route for a complete logout
+    try {
+      await fetch("/api/auth/signout", {
+        method: "GET",
+        credentials: "include",
+      })
+      console.log("[AUTH] Server-side signout called")
+    } catch (apiError) {
+      console.error("[AUTH] API signout error:", apiError)
+      // Continue with redirect even if this fails
+    }
+
+    // Force a hard redirect to auth page
     window.location.href = "/auth"
+
+    return { success: true }
   } catch (error) {
     console.error("[AUTH] SignOut error:", error)
+
+    // Even if there's an error, try to redirect to auth page
+    window.location.href = "/auth"
     throw error
   }
 }
