@@ -89,14 +89,14 @@ export default function AuthPage() {
       console.log("[AUTH PAGE] Error parameter found:", errorParam)
 
       if (errorParam === "session_expired") {
-        setLoginError("Your session has expired. Please log in again.")
+        // Only show toast, don't set loginError to avoid the flash
         toast({
           title: "Session expired",
           description: "Your session has expired. Please log in again.",
           variant: "destructive",
         })
       } else if (errorParam === "server_error") {
-        setLoginError("A server error occurred. Please try again.")
+        // Only show toast, don't set loginError to avoid the flash
         toast({
           title: "Server error",
           description: "A server error occurred. Please try again.",
@@ -104,7 +104,7 @@ export default function AuthPage() {
         })
       }
     }
-  }, [errorParam])
+  }, [errorParam, toast])
 
   // Reset errors when switching tabs
   useEffect(() => {
