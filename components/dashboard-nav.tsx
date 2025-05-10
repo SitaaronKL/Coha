@@ -4,8 +4,7 @@ import Link from "next/link"
 import { LogOut, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { useEffect, useState } from "react"
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { useEffect, useState, useRef } from "react"
 
 interface DashboardNavProps {
   user?: any
@@ -13,28 +12,18 @@ interface DashboardNavProps {
 
 export function DashboardNav({ user: initialUser }: DashboardNavProps) {
   const [user, setUser] = useState(initialUser)
+  // Add a ref to track if data has been fetched
+  const dataFetchedRef = useRef(false)
+  // Add a ref to track ongoing fetch operations
+  const fetchingRef = useRef(false)
 
   // If user is not provided as a prop, fetch it
   useEffect(() => {
-    if (!initialUser) {
+    if (!initialUser && !dataFetchedRef.current && !fetchingRef.current) {
       const fetchUser = async () => {
         try {
-          // Try to get user directly from Supabase
-          const supabase = createClientComponentClient()
-          const {
-            data: { session },
-          } = await supabase.auth.getSession()
-
-          if (session) {
-            const { data: profile } = await supabase.from("profiles").select("*").eq("id", session.user.id).single()
-
-            if (profile) {
-              setUser(profile)
-              return
-            }
-          }
-
-          // Fallback to API
+          fetchingRef.current = true
+          // Use the API endpoint instead of direct Supabase calls
           const response = await fetch("/api/profile", {
             credentials: "include",
             headers: {
@@ -44,10 +33,19 @@ export function DashboardNav({ user: initialUser }: DashboardNavProps) {
           const data = await response.json()
           if (data.success && data.profile) {
             setUser(data.profile)
+            dataFetchedRef.current = true
           }
-        } catch (error) {}
+        } catch (error) {
+          console.error("Error fetching user data:", error)
+        } finally {
+          fetchingRef.current = false
+        }
       }
       fetchUser()
+    } else if (initialUser && !dataFetchedRef.current) {
+      // If initialUser is provided, set it and mark as fetched
+      setUser(initialUser)
+      dataFetchedRef.current = true
     }
   }, [initialUser])
 

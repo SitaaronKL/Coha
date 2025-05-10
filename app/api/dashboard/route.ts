@@ -43,28 +43,98 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: false, error: profileError.message }, { status: 500 })
     }
 
+    // Fetch user's matches - first as user_id_1
+    const { data: matchesAsUser1, error: matchesAsUser1Error } = await supabase
+      .from("matches")
+      .select(`
+        *,
+        matched_profile:user_id_2 (
+          id,
+          first_name,
+          last_name,
+          avatar_url,
+          major,
+          year,
+          bio,
+          email,
+          phone,
+          instagram,
+          twitter
+        )
+      `)
+      .eq("user_id_1", userId)
+      .order("compatibility_score", { ascending: false })
+
+    if (matchesAsUser1Error) {
+      console.error("[API] Error fetching matches as user 1:", matchesAsUser1Error)
+    }
+
+    // Then, get matches where the user is user_id_2
+    const { data: matchesAsUser2, error: matchesAsUser2Error } = await supabase
+      .from("matches")
+      .select(`
+        *,
+        matched_profile:user_id_1 (
+          id,
+          first_name,
+          last_name,
+          avatar_url,
+          major,
+          year,
+          bio,
+          email,
+          phone,
+          instagram,
+          twitter
+        )
+      `)
+      .eq("user_id_2", userId)
+      .order("compatibility_score", { ascending: false })
+
+    if (matchesAsUser2Error) {
+      console.error("[API] Error fetching matches as user 2:", matchesAsUser2Error)
+    }
+
+    // Combine both sets of matches
+    const allMatches = [...(matchesAsUser1 || []), ...(matchesAsUser2 || [])]
+
+    // Check if user has preferences
+    const { data: preferencesData, error: preferencesError } = await supabase
+      .from("user_preferences")
+      .select("id")
+      .eq("user_id", userId)
+      .single()
+
+    let hasPreferences = true
+    if (preferencesError && preferencesError.code === "PGRST116") {
+      // No preferences found
+      hasPreferences = false
+    } else if (preferencesError) {
+      console.error("[API] Error checking preferences:", preferencesError)
+      // Continue anyway, default is to assume they have preferences
+    }
+
     // Get housing deadlines for the user's university
     const { data: deadlines, error: deadlinesError } = await supabase
       .from("housing_deadlines")
       .select("*")
-      .eq("university_id", profile.university_id)
+      .eq("university_id", profile.university_id || "")
       .order("deadline_date", { ascending: true })
 
     if (deadlinesError) {
+      console.error("[API] Error fetching deadlines:", deadlinesError)
       // Continue anyway as this is not critical
     }
-
-    // Get matches (for now, we'll return an empty array as requested)
-    // In a real implementation, we would fetch actual matches from the database
-    const matches = []
 
     return NextResponse.json({
       success: true,
       profile,
+      matches: allMatches || [],
+      hasPreferences,
       deadlines: deadlines || [],
-      matches,
     })
   } catch (error) {
+    console.error("[API] Dashboard data fetch error:", error)
     return NextResponse.json({ success: false, error: "Internal server error" }, { status: 500 })
   }
 }
