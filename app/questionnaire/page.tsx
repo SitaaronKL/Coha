@@ -314,14 +314,9 @@ export default function QuestionnairePage() {
     setIsLoading(true)
 
     try {
-      // Save the question rankings first
-      await saveQuestionRankings(
-        user.id,
-        questionRankings.map((item, index) => ({
-          ...item,
-          rank: index + 1,
-        })),
-      )
+      // Save the question rankings first - now just passing the array of objects
+      // The saveQuestionRankings function will extract just the IDs in order
+      await saveQuestionRankings(user.id, questionRankings)
 
       // Then save the questionnaire answers
       await submitQuestionnaire(user.id, answers)

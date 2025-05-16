@@ -30,7 +30,6 @@ export async function updateUserProfile(
     bio?: string
     phone?: string
     instagram?: string
-    twitter?: string
   },
 ) {
   const supabase = createClientSideSupabaseClient()
@@ -45,7 +44,6 @@ export async function updateUserProfile(
       bio: profileData.bio,
       phone: profileData.phone,
       instagram: profileData.instagram,
-      twitter: profileData.twitter,
       updated_at: new Date().toISOString(),
     })
     .eq("id", userId)

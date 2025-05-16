@@ -44,7 +44,6 @@ export async function POST(request: Request) {
           bio: profileData.bio,
           phone: profileData.phone,
           instagram: profileData.instagram,
-          twitter: profileData.twitter,
           avatar_url: profileData.avatarUrl, // Include avatar URL in the update
           updated_at: new Date().toISOString(),
         })

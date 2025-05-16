@@ -24,24 +24,20 @@ export async function submitQuestionnaire(userId: string, answers: Record<number
   return await saveUserPreferences(userId, preferences)
 }
 
-// New function to save question rankings
+// Updated function to save question rankings as an array
 export async function saveQuestionRankings(
   userId: string,
-  rankings: Array<{ id: number; question: string; rank: number }>,
+  rankings: Array<{ id: number; question: string; rank?: number }>,
 ) {
   try {
-    // First delete any existing rankings for this user
-    await supabase.from("question_rankings").delete().eq("user_id", userId)
+    // Extract just the question IDs in the correct order
+    const orderedQuestionIds = rankings.map((item) => item.id)
 
-    // Insert the new rankings
-    const { error } = await supabase.from("question_rankings").insert(
-      rankings.map((item) => ({
-        user_id: userId,
-        question_id: item.id,
-        question_text: item.question,
-        rank_order: item.rank,
-      })),
-    )
+    // Update the profile with the ordered question IDs
+    const { error } = await supabase
+      .from("profiles")
+      .update({ question_ranking_order: orderedQuestionIds })
+      .eq("id", userId)
 
     if (error) throw error
     return { success: true }

@@ -1,219 +1,129 @@
 "use client"
 
 import { useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import {
-  CheckCircle2,
-  ChevronDown,
-  ChevronUp,
-  ExternalLink,
-  Instagram,
-  Mail,
-  Phone,
-  Star,
-  ThumbsUp,
-  XCircle,
-  Twitter,
-} from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { ChevronDown, ChevronUp, Instagram, Mail, Phone, Star } from "lucide-react"
 
-interface MatchingTrait {
-  category: string
-  value: string
-  match: boolean
-}
-
-interface Match {
-  id: number
+interface MatchProps {
+  id: string
   name: string
   avatar: string
   major: string
   year: string
   compatibility: number
   bio: string
-  tags: string[]
+  tags?: string[]
   instagram?: string
-  twitter?: string
-  email: string
-  phone: string
-  matchingTraits: MatchingTrait[]
+  email?: string
+  phone?: string
+  matchingTraits?: string[]
 }
 
-interface MatchCardProps {
-  match: Match
-}
-
-export function MatchCard({ match }: MatchCardProps) {
+export function MatchCard({ match }: { match: MatchProps }) {
   const [expanded, setExpanded] = useState(false)
 
   // Get initials for avatar fallback
-  const getInitials = (name: string) => {
-    return name
+  const getInitials = () => {
+    return match.name
       .split(" ")
       .map((n) => n[0])
       .join("")
   }
 
   return (
-    <Card className="bg-white/80 backdrop-blur-md border-gray-200 shadow-lg overflow-hidden">
+    <Card className="overflow-hidden bg-white/80 backdrop-blur-md border-gray-200 shadow-lg">
       <CardContent className="p-0">
-        <div className="p-6">
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex flex-row md:flex-col gap-4 items-center">
-              <Avatar className="h-20 w-20 border-2 border-gray-200">
-                <AvatarImage src={match.avatar || "/placeholder.svg"} alt={match.name} />
-                <AvatarFallback className="bg-gray-100 text-gray-800">{getInitials(match.name)}</AvatarFallback>
-              </Avatar>
+        {/* Basic Info - Always Visible */}
+        <div className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+            <Avatar className="h-20 w-20 border-2 border-gray-200">
+              <AvatarImage src={match.avatar || "/placeholder.svg"} alt={match.name} className="object-cover" />
+              <AvatarFallback className="bg-gray-100 text-gray-800">{getInitials()}</AvatarFallback>
+            </Avatar>
 
-              <div className="flex flex-col items-center">
-                {/* Remove this div:
-                <div className="bg-black/10 backdrop-blur-sm text-gray-900 text-sm font-medium px-2 py-1 rounded-full mb-1 border border-gray-200">
-                  {match.compatibility}% Match
-                </div>
-                */}
-                <div className="flex gap-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                  >
-                    <Star className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                  >
-                    <ThumbsUp className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex-1">
-              <div className="flex flex-col md:flex-row justify-between mb-2">
-                <div>
-                  <h3 className="text-xl font-medium text-gray-900">{match.name}</h3>
-                  <p className="text-sm text-gray-600">
-                    {match.major}, {match.year}
-                  </p>
-                </div>
-
-                <div className="flex gap-2 mt-2 md:mt-0">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="border-gray-300 text-gray-700 hover:bg-gray-100"
-                    onClick={() => setExpanded(!expanded)}
-                  >
-                    {expanded ? (
-                      <>
-                        Less Info
-                        <ChevronUp className="ml-1 h-4 w-4" />
-                      </>
-                    ) : (
-                      <>
-                        More Info
-                        <ChevronDown className="ml-1 h-4 w-4" />
-                      </>
-                    )}
+            <div className="flex-1 text-center sm:text-left">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 justify-center sm:justify-between mb-2">
+                <h3 className="text-xl font-semibold text-gray-900">{match.name}</h3>
+                <div className="flex items-center justify-center sm:justify-start gap-2">
+                  <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+                    <Star className="h-4 w-4 text-gray-500" />
+                    <span className="sr-only">Favorite</span>
                   </Button>
                 </div>
               </div>
 
-              <p className="text-gray-700 mb-3">{match.bio}</p>
+              <p className="text-gray-600 mb-3">
+                {match.major} • {match.year}
+              </p>
 
-              <div className="flex flex-wrap gap-2">
-                {match.tags && match.tags.length > 0 ? (
-                  match.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="text-xs bg-gray-100 px-2 py-1 rounded-full text-gray-700 border border-gray-200"
-                    >
-                      {tag}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-xs text-gray-500">No tags available</span>
-                )}
+              <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                {match.tags?.map((tag, i) => (
+                  <Badge key={i} variant="outline" className="bg-gray-100 text-gray-800 border-gray-300">
+                    {tag}
+                  </Badge>
+                ))}
               </div>
             </div>
           </div>
+
+          <div className="mt-4 flex justify-between items-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-600 hover:text-gray-900 p-0 h-auto"
+              onClick={() => setExpanded(!expanded)}
+            >
+              {expanded ? (
+                <>
+                  <ChevronUp className="h-4 w-4 mr-1" />
+                  Less Info
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="h-4 w-4 mr-1" />
+                  More Info
+                </>
+              )}
+            </Button>
+          </div>
         </div>
 
+        {/* Expanded Info */}
         {expanded && (
-          <div className="border-t border-gray-200 p-6 bg-gray-50">
-            <div className="grid md:grid-cols-2 gap-6">
+          <div className="border-t border-gray-200 p-4 sm:p-6 bg-gray-50/80">
+            <div className="space-y-4">
+              {/* Bio Section */}
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Contact Information</h4>
-                <div className="space-y-3">
-                  {match.instagram && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Instagram className="h-4 w-4 text-gray-600" />
-                      <span className="text-gray-700">@{match.instagram}</span>
-                      <a
-                        href={`https://instagram.com/${match.instagram}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-auto text-gray-900 hover:text-gray-700"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </div>
-                  )}
-
-                  {match.twitter && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Twitter className="h-4 w-4 text-gray-600" />
-                      <span className="text-gray-700">@{match.twitter}</span>
-                      <a
-                        href={`https://twitter.com/${match.twitter}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="ml-auto text-gray-900 hover:text-gray-700"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-2 text-sm">
-                    <Mail className="h-4 w-4 text-gray-600" />
-                    <span className="text-gray-700">{match.email}</span>
-                    <a href={`mailto:${match.email}`} className="ml-auto text-gray-900 hover:text-gray-700">
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-gray-600" />
-                    <span className="text-gray-700">{match.phone}</span>
-                  </div>
-                </div>
+                <h4 className="text-sm font-medium text-gray-900 mb-2">About</h4>
+                <p className="text-gray-700">{match.bio}</p>
               </div>
 
+              {/* Contact Info */}
               <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Matching Traits</h4>
-                {match.matchingTraits && match.matchingTraits.length > 0 ? (
-                  <div className="space-y-3">
-                    {match.matchingTraits.map((trait, index) => (
-                      <div key={index} className="flex items-start gap-2 text-sm">
-                        {trait.match ? (
-                          <CheckCircle2 className="h-4 w-4 text-green-600 mt-0.5" />
-                        ) : (
-                          <XCircle className="h-4 w-4 text-gray-500 mt-0.5" />
-                        )}
-                        <div>
-                          <div className="text-gray-600">{trait.category}</div>
-                          <div className={trait.match ? "text-gray-900" : "text-gray-500"}>{trait.value}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500">No matching traits information available</p>
-                )}
+                <h4 className="text-sm font-medium text-gray-900 mb-2">Contact Information</h4>
+                <div className="space-y-2">
+                  {match.email && (
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <Mail className="h-4 w-4 text-gray-500" />
+                      <span>{match.email}</span>
+                    </div>
+                  )}
+                  {match.phone && (
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <Phone className="h-4 w-4 text-gray-500" />
+                      <span>{match.phone}</span>
+                    </div>
+                  )}
+                  {match.instagram && (
+                    <div className="flex items-center gap-2 text-gray-700">
+                      <Instagram className="h-4 w-4 text-gray-500" />
+                      <span>@{match.instagram}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

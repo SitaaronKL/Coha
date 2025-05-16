@@ -14,7 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Inter } from "next/font/google"
-import { CheckCircle, Instagram, Loader2, Save, Twitter, ArrowLeft, LinkIcon, AlertCircle } from "lucide-react"
+import { CheckCircle, Instagram, Loader2, Save, ArrowLeft, LinkIcon, AlertCircle } from "lucide-react"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { toast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
@@ -42,7 +42,6 @@ export default function ProfilePage() {
     bio: "",
     phone: "",
     instagram: "",
-    twitter: "",
     avatarUrl: "", // Added avatarUrl field
     showEmail: false,
     showPhone: false,
@@ -129,7 +128,6 @@ export default function ProfilePage() {
               bio: profile.bio || "",
               phone: profile.phone || "",
               instagram: profile.instagram || "",
-              twitter: profile.twitter || "",
               avatarUrl: profile.avatar_url || "", // Set avatar URL from profile data
               // Set privacy settings if available
               ...(privacySettings && {
@@ -191,7 +189,6 @@ export default function ProfilePage() {
             bio: data.profile.bio || "",
             phone: data.profile.phone || "",
             instagram: data.profile.instagram || "",
-            twitter: data.profile.twitter || "",
             avatarUrl: data.profile.avatar_url || "", // Set avatar URL from profile data
             // Set privacy settings if available
             ...(data.privacySettings && {
@@ -258,7 +255,6 @@ export default function ProfilePage() {
           bio: userData.bio,
           phone: userData.phone,
           instagram: userData.instagram,
-          twitter: userData.twitter,
           avatar_url: userData.avatarUrl,
           updated_at: new Date().toISOString(),
         }
@@ -329,7 +325,6 @@ export default function ProfilePage() {
         bio: userData.bio,
         phone: userData.phone,
         instagram: userData.instagram,
-        twitter: userData.twitter,
         avatarUrl: userData.avatarUrl, // Include avatar URL in profile data
       }
 
@@ -645,35 +640,19 @@ export default function ProfilePage() {
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="instagram" className="text-gray-800">
-                            <Instagram className="h-4 w-4 inline mr-2" />
-                            Instagram Username
-                          </Label>
-                          <Input
-                            id="instagram"
-                            name="instagram"
-                            value={userData.instagram}
-                            onChange={handleInputChange}
-                            className="bg-white border-gray-300 text-gray-900"
-                            placeholder="username (without @)"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="twitter" className="text-gray-800">
-                            <Twitter className="h-4 w-4 inline mr-2" />
-                            Twitter Username
-                          </Label>
-                          <Input
-                            id="twitter"
-                            name="twitter"
-                            value={userData.twitter}
-                            onChange={handleInputChange}
-                            className="bg-white border-gray-300 text-gray-900"
-                            placeholder="username (without @)"
-                          />
-                        </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="instagram" className="text-gray-800">
+                          <Instagram className="h-4 w-4 inline mr-2" />
+                          Instagram Username
+                        </Label>
+                        <Input
+                          id="instagram"
+                          name="instagram"
+                          value={userData.instagram}
+                          onChange={handleInputChange}
+                          className="bg-white border-gray-300 text-gray-900"
+                          placeholder="username (without @)"
+                        />
                       </div>
                     </CardContent>
                   </Card>

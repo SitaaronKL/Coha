@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Inter } from "next/font/google"
-import { Calendar, Settings, Loader2, ClipboardList } from "lucide-react"
+import { Calendar, Settings, Loader2, ClipboardList, UserCircle } from "lucide-react"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { MatchCard } from "@/components/match-card"
 import Link from "next/link"
@@ -26,6 +26,7 @@ export default function DashboardClientPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [hasPreferences, setHasPreferences] = useState(true) // Default to true, will be updated after checking
+  const [isProfileComplete, setIsProfileComplete] = useState(true) // Default to true, will be updated after checking
   const { toast } = useToast()
 
   useEffect(() => {
@@ -88,6 +89,9 @@ export default function DashboardClientPage() {
 
       setProfile(profileData)
 
+      // Check if profile is complete
+      checkProfileCompleteness(profileData)
+
       // Fetch user's matches - using the actual schema structure
       try {
         // First, get matches where the user is user_id_1
@@ -105,8 +109,7 @@ export default function DashboardClientPage() {
               bio,
               email,
               phone,
-              instagram,
-              twitter
+              instagram
             )
           `)
           .eq("user_id_1", user.id)
@@ -131,8 +134,7 @@ export default function DashboardClientPage() {
               bio,
               email,
               phone,
-              instagram,
-              twitter
+              instagram
             )
           `)
           .eq("user_id_2", user.id)
@@ -198,6 +200,21 @@ export default function DashboardClientPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // Check if profile is complete
+  const checkProfileCompleteness = (profileData) => {
+    if (!profileData) {
+      setIsProfileComplete(false)
+      return
+    }
+
+    // Check essential fields (excluding Twitter as mentioned)
+    const requiredFields = ["first_name", "last_name", "major", "year", "bio"]
+
+    const missingFields = requiredFields.filter((field) => !profileData[field] || profileData[field].trim() === "")
+
+    setIsProfileComplete(missingFields.length === 0)
   }
 
   // Get user's initials for avatar fallback
@@ -276,7 +293,6 @@ export default function DashboardClientPage() {
       bio: matchedProfile.bio || "No bio available",
       tags: [], // We don't have tags in the current schema
       instagram: matchedProfile.instagram,
-      twitter: matchedProfile.twitter,
       email: matchedProfile.email || "No email available",
       phone: matchedProfile.phone || "No phone available",
       matchingTraits: [], // We don't have matching traits in the current schema
@@ -352,7 +368,7 @@ export default function DashboardClientPage() {
 
                   <div className="flex flex-wrap gap-2 mt-3">
                     <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-300">
-                      Profile {profile ? "Active" : "Incomplete"}
+                      Profile {isProfileComplete ? "Complete" : "Incomplete"}
                     </Badge>
                     <Badge variant="outline" className="bg-gray-100 text-gray-700 border-gray-200">
                       {matches.length} Matches
@@ -373,25 +389,48 @@ export default function DashboardClientPage() {
                 </div>
               </div>
 
-              {/* Questionnaire Prompt - Only show if user doesn't have preferences */}
-              {!hasPreferences && (
-                <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg animate-pulse">
-                  <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="bg-blue-100 p-3 rounded-full">
-                      <ClipboardList className="h-6 w-6 text-blue-600" />
+              {/* Notifications Section */}
+              <div className="space-y-4 mt-6">
+                {/* Questionnaire Prompt - Only show if user doesn't have preferences */}
+                {!hasPreferences && (
+                  <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                      <div className="bg-blue-100 p-3 rounded-full">
+                        <ClipboardList className="h-6 w-6 text-blue-600" />
+                      </div>
+                      <div className="flex-1 text-center sm:text-left">
+                        <h3 className="font-semibold text-blue-800">Complete your roommate questionnaire</h3>
+                        <p className="text-blue-600 text-sm mb-3">
+                          Find your perfect roommate match by completing our quick questionnaire
+                        </p>
+                      </div>
+                      <Link href="/questionnaire" className="block">
+                        <Button className="bg-softblack hover:bg-blue-700 text-white">Complete Questionnaire</Button>
+                      </Link>
                     </div>
-                    <div className="flex-1 text-center sm:text-left">
-                      <h3 className="font-semibold text-blue-800">Complete your roommate questionnaire</h3>
-                      <p className="text-blue-600 text-sm mb-3">
-                        Find your perfect roommate match by completing our quick questionnaire
-                      </p>
-                    </div>
-                    <Link href="/questionnaire" className="block">
-                      <Button className="bg-softblack hover:bg-blue-700 text-white">Complete Questionnaire</Button>
-                    </Link>
                   </div>
-                </div>
-              )}
+                )}
+
+                {/* Profile Completion Prompt - Only show if profile is incomplete */}
+                {!isProfileComplete && (
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div className="flex flex-col sm:flex-row items-center gap-4">
+                      <div className="bg-amber-100 p-3 rounded-full">
+                        <UserCircle className="h-6 w-6 text-amber-600" />
+                      </div>
+                      <div className="flex-1 text-center sm:text-left">
+                        <h3 className="font-semibold text-amber-800">Complete your profile</h3>
+                        <p className="text-amber-600 text-sm mb-3">
+                          Update your profile information to help us find better matches for you
+                        </p>
+                      </div>
+                      <Link href="/dashboard/profile" className="block">
+                        <Button className="bg-softblack hover:bg-amber-700 text-white">Update Profile</Button>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
             </section>
 
             {/* Matches Section */}
