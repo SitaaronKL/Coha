@@ -8,56 +8,47 @@ export async function middleware(req: NextRequest) {
   // Create a Supabase client configured to use cookies
   const supabase = createMiddlewareClient({ req, res })
 
-  // Check if we're already on the auth page to prevent redirect loops
-  const isAuthPage = req.nextUrl.pathname.startsWith("/auth")
+  // Refresh session if expired - required for Server Components
+  const {
+    data: { session },
+    error,
+  } = await supabase.auth.getSession()
 
-  try {
-    // Refresh session if expired - required for Server Components
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
+  if (error) {
+    console.error("[MIDDLEWARE] Session error:", error)
+  }
 
-    // Handle authentication for protected routes
-    if (req.nextUrl.pathname.startsWith("/dashboard")) {
-      if (!session) {
-        // Create a URL for the auth page WITHOUT an error parameter
-        // This prevents the annoying error message
-        const redirectUrl = new URL("/auth", req.url)
+  // Prevent redirect loops - if we're already on the auth page with an error parameter, don't redirect again
+  const isAuthPageWithError = req.nextUrl.pathname.startsWith("/auth") && req.nextUrl.searchParams.has("error")
 
-        // Only add error param for actual expired sessions, not just missing sessions
-        // This helps prevent the constant error messages
-        if (req.cookies.has("sb-access-token") || req.cookies.has("sb-refresh-token")) {
-          redirectUrl.searchParams.set("error", "session_expired")
-        }
-
-        return NextResponse.redirect(redirectUrl)
-      }
-
-      // Session exists, allow access to dashboard
-      return res
-    }
-
-    // For auth page, if user is already logged in, redirect to dashboard
-    if (isAuthPage && session) {
-      return NextResponse.redirect(new URL("/dashboard", req.url))
-    }
-
+  if (isAuthPageWithError) {
     return res
-  } catch (error) {
-    console.error("[MIDDLEWARE] Error:", error)
+  }
 
-    // Don't redirect if already on auth page
-    if (isAuthPage) {
-      return res
+  // Handle authentication for protected routes
+  if (req.nextUrl.pathname.startsWith("/dashboard")) {
+    if (!session) {
+      // Create a URL for the auth page with an error parameter
+      const redirectUrl = new URL("/auth", req.url)
+      redirectUrl.searchParams.set("error", "session_expired")
+
+      return NextResponse.redirect(redirectUrl)
     }
 
-    // For protected routes, redirect to auth without error message
-    if (req.nextUrl.pathname.startsWith("/dashboard")) {
-      return NextResponse.redirect(new URL("/auth", req.url))
-    }
+    // Session exists, allow access to dashboard
+
+    // Add session user ID to headers for debugging
+    res.headers.set("x-user-id", session.user.id)
 
     return res
   }
+
+  // For auth page, if user is already logged in, redirect to dashboard
+  if (req.nextUrl.pathname.startsWith("/auth") && session) {
+    return NextResponse.redirect(new URL("/dashboard", req.url))
+  }
+
+  return res
 }
 
 // Only run middleware on specific paths

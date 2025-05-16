@@ -67,9 +67,11 @@ export function MatchCard({ match }: MatchCardProps) {
               </Avatar>
 
               <div className="flex flex-col items-center">
+                {/* Remove this div:
                 <div className="bg-black/10 backdrop-blur-sm text-gray-900 text-sm font-medium px-2 py-1 rounded-full mb-1 border border-gray-200">
                   {match.compatibility}% Match
                 </div>
+                */}
                 <div className="flex gap-1">
                   <Button
                     variant="ghost"

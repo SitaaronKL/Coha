@@ -3,47 +3,46 @@ import { Inter } from "next/font/google"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { motion } from "framer-motion"
-import { FounderCard } from "./founder-card"
+import { TeamMemberCard } from "./founder-card"
 
 const inter = Inter({ subsets: ["latin"] })
 
-// Founder data
-const founders = [
+// Team member data
+const teamMembers = [
   {
     id: 1,
-    name: "David Gregory",
-    avatar: "/placeholder.svg?height=400&width=400&text=DG",
-    major: "Industrial Engineering",
-    year: "Sophomore",
-    compatibility: 98,
-    bio: "I like making stuff",
-    tags: ["Honors College", "Industrial Engineering", "Entrepreneur"],
-    achievements: ["Cofounder of X Radar/RURadar", "Changemaking mentor", "Honors College"],
+    name: "David",
+    avatar: "/images/team/david.png",
+    role: "Co-Founder",
+    bio: "Hello! I'm a rising junior at Rutgers studying industrial engineering. Outside of academics, I love traveling and skiing. I'm passionate about entrepreneurship, and I hope that one day every Rutgers student will start and end their roommate search with Coha.",
   },
   {
     id: 2,
-    name: "Dhruv Lalwani",
-    avatar: "/placeholder.svg?height=400&width=400&text=DL",
-    major: "Computer Science & Neuroscience",
-    year: "Freshman",
-    compatibility: 97,
-    bio: "I do not like making stuff",
-    tags: ["Honors College", "Computer Science", "Neuroscience"],
-    achievements: [
-      "Incoming MongoDB backed startup founder",
-      "Presidential Scholar",
-    ],
+    name: "Dhruv",
+    avatar: "/images/team/aryan.png",
+    role: "Co-Founder",
+    bio: "Hello! I'm a rising sophomore at Rutgers studying Computer Science and Neuroscience. In my free time, I design clothes and play videogames competitively. I joined this team to help create the kind of roommate-matching experience I wish I had when I was searching.",
   },
   {
     id: 3,
-    name: "Murat Turkeli",
-    avatar: "/placeholder.svg?height=400&width=400&text=MT",
-    major: "Industrial Engineering",
-    year: "Sophomore",
-    compatibility: 96,
-    bio: "I am international",
-    tags: ["Honors College", "Industrial Engineering", "Tesla"],
-    achievements: ["Incoming Tesla Intern"],
+    name: "Murat",
+    avatar: "/images/team/murat.png",
+    role: "Co-Founder",
+    bio: "Hey! I'm a rising junior at Rutgers and am studying industrial engineering. I love to play tennis and chess in my free time. I came up with the idea of Coha during my out-of-state roommate search— now, I can make my vision reality with the perfect team!",
+  },
+  {
+    id: 4,
+    name: "Violette",
+    avatar: "/images/team/violette.png",
+    role: "Social Media Lead",
+    bio: "Hi everyone! I'm a rising sophomore at Rutgers studying Cognitive Science with minors in Psych and Business Admin. I love concerts, reading, and day trips. I can't wait to help our website grow and for students to use Coha for their roommate search!",
+  },
+  {
+    id: 5,
+    name: "Aryan",
+    avatar: "/images/team/dhruv.png",
+    role: "Matching Lead",
+    bio: "Hello! I'm a rising junior at Rutgers studying Math, Computer Science, and Economics. In my free time, I enjoy working on cars and calisthenics, and I hope to one day work in quant. I joined this team to apply machine learning to a more practical solution!",
   },
 ]
 
@@ -64,19 +63,19 @@ export default function TeamPage() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
             <h1 className="text-3xl md:text-4xl font-bold text-center mb-4">Meet Our Team</h1>
             <p className="text-lg text-gray-600 text-center mb-12">
-              The founders behind Coha - the first AI roommate matching platform for Rutgers
+              The team behind Coha - the first (and most advanced) roommate matching platform for Rutgers
             </p>
           </motion.div>
 
           <div className="space-y-8">
-            {founders.map((founder, index) => (
+            {teamMembers.map((member, index) => (
               <motion.div
-                key={founder.id}
+                key={member.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <FounderCard founder={founder} />
+                <TeamMemberCard member={member} />
               </motion.div>
             ))}
           </div>

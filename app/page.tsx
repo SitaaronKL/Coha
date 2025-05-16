@@ -292,7 +292,7 @@ export default function Home() {
               transition={{ duration: 0.56, delay: 1.75 }} // 30% faster (from 0.8s to 0.56s, delay from 2.5s to 1.75s)
             >
               <p className="text-xl md:text-2xl text-gray-600 mt-6 max-w-md mx-auto">
-                The First Personality Based Roommate Matching Platform
+                The Most Advanced Roommate Matching System
               </p>
             </motion.div>
           </div>
@@ -576,8 +576,7 @@ export default function Home() {
                 </h2>
                 <p className="text-lg text-gray-700 mb-8">Have a say in your roommate with Coha</p>
                 <div className="bg-white/80 backdrop-blur-md p-6 rounded-xl border border-gray-200 shadow-lg max-w-md mx-auto">
-                  <h3 className="text-lg font-medium mb-2 text-gray-900">Early Access</h3>
-                  <p className="mb-4 font-medium text-black">First 1000 users are free</p>
+                  <h3 className="text-lg font-medium mb-2 text-gray-900">Early Access!</h3>
 
                   <form className="space-y-4">
                     <div>

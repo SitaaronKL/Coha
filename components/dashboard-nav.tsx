@@ -1,10 +1,10 @@
 "use client"
-import { User } from "lucide-react"
+
+import Link from "next/link"
+import { LogOut, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useEffect, useState, useRef } from "react"
-// Import the LogoutButton at the top of the file
-import { LogoutButton } from "@/components/logout-button"
 
 interface DashboardNavProps {
   user?: any
@@ -100,7 +100,23 @@ export function DashboardNav({ user: initialUser }: DashboardNavProps) {
       </div>
 
       <div className="mt-auto">
-        <LogoutButton />
+        <Button variant="ghost" asChild className="justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100">
+          <Link
+            href="/auth"
+            onClick={async (e) => {
+              e.preventDefault()
+              try {
+                await fetch("/api/auth/signout")
+                window.location.href = "/"
+              } catch (error) {
+                window.location.href = "/"
+              }
+            }}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Log out
+          </Link>
+        </Button>
       </div>
     </aside>
   )

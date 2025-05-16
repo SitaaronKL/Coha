@@ -271,7 +271,8 @@ export default function DashboardClientPage() {
         `/placeholder.svg?height=400&width=400&text=${matchedProfile.first_name?.[0] || ""}${matchedProfile.last_name?.[0] || ""}`,
       major: matchedProfile.major || "Undeclared",
       year: matchedProfile.year || "Unknown",
-      compatibility: Math.round(match.compatibility_score || 0),
+      // compatibility: Math.round(match.compatibility_score || 0),
+      compatibility: 0, // Removed from UI but still needed for the interface
       bio: matchedProfile.bio || "No bio available",
       tags: [], // We don't have tags in the current schema
       instagram: matchedProfile.instagram,

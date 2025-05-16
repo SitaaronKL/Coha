@@ -54,11 +54,11 @@ export default function AuthPage() {
   useEffect(() => {
     console.log("[AUTH PAGE] Checking if user is already logged in")
 
-    // Clear error parameter from URL to prevent it from persisting
-    if (errorParam && window.history.replaceState) {
-      const newUrl = new URL(window.location.href)
-      newUrl.searchParams.delete("error")
-      window.history.replaceState({}, document.title, newUrl.toString())
+    // If there's an error parameter, don't check auth to prevent redirect loops
+    if (errorParam) {
+      console.log("[AUTH PAGE] Error parameter found, skipping auth check:", errorParam)
+      setCheckingAuth(false)
+      return
     }
 
     const checkUser = async () => {
@@ -83,18 +83,20 @@ export default function AuthPage() {
     checkSupabaseConfig()
   }, [router, errorParam])
 
-  // Set error message from URL parameter - but only show toast, not error state
+  // Set error message from URL parameter
   useEffect(() => {
     if (errorParam) {
       console.log("[AUTH PAGE] Error parameter found:", errorParam)
 
       if (errorParam === "session_expired") {
+        // Only show toast, don't set loginError to avoid the flash
         toast({
           title: "Session expired",
           description: "Your session has expired. Please log in again.",
           variant: "destructive",
         })
       } else if (errorParam === "server_error") {
+        // Only show toast, don't set loginError to avoid the flash
         toast({
           title: "Server error",
           description: "A server error occurred. Please try again.",
@@ -102,7 +104,7 @@ export default function AuthPage() {
         })
       }
     }
-  }, [errorParam])
+  }, [errorParam, toast])
 
   // Reset errors when switching tabs
   useEffect(() => {

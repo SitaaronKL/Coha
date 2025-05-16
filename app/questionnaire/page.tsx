@@ -7,16 +7,33 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Inter } from "next/font/google"
 import Link from "next/link"
-import { Check, ChevronLeft, ChevronRight } from "lucide-react"
+import { Check, ChevronLeft, ChevronRight, GripVertical } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { getCurrentUser } from "@/lib/auth"
-import { submitQuestionnaire } from "@/lib/questionnaire"
+import { submitQuestionnaire, saveQuestionRankings } from "@/lib/questionnaire"
 import { toast } from "@/hooks/use-toast"
 import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import "./metallic-shimmer.css"
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core"
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -164,15 +181,57 @@ const mbtiQuestion = {
   ],
 }
 
+// Sortable item component for the ranking part
+function SortableItem({ id, question, index }) {
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="flex items-center space-x-2 rounded-lg border border-gray-200 p-4 mb-2 bg-white cursor-move"
+      {...attributes}
+      {...listeners}
+    >
+      <div className="flex items-center justify-center text-gray-400 mr-2">
+        <GripVertical size={20} />
+      </div>
+      <div className="flex-1">
+        <div className="font-medium">
+          {index + 1}. {question}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function QuestionnairePage() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState<Record<number, string>>({})
   const [isLoading, setIsLoading] = useState(false)
   const [user, setUser] = useState(null)
   const [showMBTI, setShowMBTI] = useState(false)
+  const [showRanking, setShowRanking] = useState(false)
   const router = useRouter()
   // Add a new state to track whether the user has started the questionnaire
   const [hasStarted, setHasStarted] = useState(false)
+  // Add state for question rankings
+  const [questionRankings, setQuestionRankings] = useState(() =>
+    lifestyleQuestions.map((q) => ({ id: q.id, question: q.question })),
+  )
+
+  // Set up sensors for drag and drop
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  )
 
   useEffect(() => {
     async function loadUser() {
@@ -204,19 +263,40 @@ export default function QuestionnairePage() {
   const handleNext = () => {
     if (currentQuestion < lifestyleQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1)
-    } else if (currentQuestion === lifestyleQuestions.length - 1 && !showMBTI) {
+    } else if (currentQuestion === lifestyleQuestions.length - 1 && !showRanking && !showMBTI) {
+      // Transition to ranking section
+      setShowRanking(true)
+    } else if (showRanking && !showMBTI) {
       // Transition to MBTI section
+      setShowRanking(false)
       setShowMBTI(true)
     }
   }
 
   const handlePrevious = () => {
     if (showMBTI) {
-      // Go back to lifestyle questions
+      // Go back to ranking section
       setShowMBTI(false)
+      setShowRanking(true)
+    } else if (showRanking) {
+      // Go back to lifestyle questions
+      setShowRanking(false)
       setCurrentQuestion(lifestyleQuestions.length - 1)
     } else if (currentQuestion > 0) {
       setCurrentQuestion(currentQuestion - 1)
+    }
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (active.id !== over.id) {
+      setQuestionRankings((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id)
+        const newIndex = items.findIndex((item) => item.id === over.id)
+
+        return arrayMove(items, oldIndex, newIndex)
+      })
     }
   }
 
@@ -234,6 +314,16 @@ export default function QuestionnairePage() {
     setIsLoading(true)
 
     try {
+      // Save the question rankings first
+      await saveQuestionRankings(
+        user.id,
+        questionRankings.map((item, index) => ({
+          ...item,
+          rank: index + 1,
+        })),
+      )
+
+      // Then save the questionnaire answers
       await submitQuestionnaire(user.id, answers)
       router.push("/questionnaire/success")
     } catch (error) {
@@ -249,8 +339,8 @@ export default function QuestionnairePage() {
   }
 
   const currentQ = showMBTI ? mbtiQuestion : lifestyleQuestions[currentQuestion]
-  const isLastLifestyleQuestion = currentQuestion === lifestyleQuestions.length - 1 && !showMBTI
-  const canProceed = answers[currentQ.id] !== undefined
+  const isLastLifestyleQuestion = currentQuestion === lifestyleQuestions.length - 1 && !showRanking && !showMBTI
+  const canProceed = answers[currentQ.id] !== undefined || showRanking
 
   // Modify the return statement to conditionally render either the intro or the questions
   return (
@@ -334,28 +424,53 @@ export default function QuestionnairePage() {
             </CardFooter>
           </Card>
         ) : (
-          // Questionnaire content - keep the existing card and content
+          // Questionnaire content
           <Card className="w-full max-w-2xl bg-white border-gray-200 shadow-md">
             <CardHeader>
               <div className="flex items-center justify-between mb-2">
                 <div className="text-sm text-gray-600">
                   {showMBTI
-                    ? "Part 2: Personality"
-                    : `Part 1: Lifestyle (Question ${currentQuestion + 1} of ${lifestyleQuestions.length})`}
+                    ? "Part 3: Personality"
+                    : showRanking
+                      ? "Part 2: Question Importance"
+                      : `Part 1: Lifestyle (Question ${currentQuestion + 1} of ${lifestyleQuestions.length})`}
                 </div>
               </div>
 
               <CardTitle className="text-xl mt-4 text-gray-900">
-                {showMBTI ? "What's your MBTI personality type?" : currentQ.question}
+                {showMBTI
+                  ? "What's your MBTI personality type?"
+                  : showRanking
+                    ? "Rank these questions by importance to you"
+                    : currentQ.question}
               </CardTitle>
               <CardDescription className="text-gray-600">
                 {showMBTI
                   ? "Select your Myers-Briggs personality type to help us find compatible roommates"
-                  : "Select the option that best describes your preference"}
+                  : showRanking
+                    ? "Drag and drop to reorder the questions based on how important they are to you"
+                    : "Select the option that best describes your preference"}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {showMBTI ? (
+              {showRanking ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-gray-600 mb-4">
+                    Drag the most important questions to the top. This helps us prioritize what matters most to you when
+                    finding roommates.
+                  </p>
+                  <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                    <SortableContext
+                      items={questionRankings.map((item) => item.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      {questionRankings.map((item, index) => (
+                        <SortableItem key={item.id} id={item.id} question={item.question} index={index} />
+                      ))}
+                    </SortableContext>
+                  </DndContext>
+                </div>
+              ) : showMBTI ? (
                 <div className="space-y-4">
                   {mbtiQuestion.categories.map((category) => (
                     <div key={category.name} className="space-y-2">
@@ -382,7 +497,7 @@ export default function QuestionnairePage() {
                     </div>
                   ))}
                   <div className="text-center mt-2 text-sm text-gray-600">
-                    Don't know your personality type?{" "}Click 
+                    Don't know your personality type? Click
                     <a
                       href="https://www.16personalities.com/free-personality-test"
                       target="_blank"
@@ -391,7 +506,7 @@ export default function QuestionnairePage() {
                     >
                       here
                     </a>{" "}
-                     to take the test and come back.
+                    to take the test and come back.
                   </div>
                 </div>
               ) : (
@@ -419,7 +534,7 @@ export default function QuestionnairePage() {
               <Button
                 variant="outline"
                 onClick={handlePrevious}
-                disabled={(currentQuestion === 0 && !showMBTI) || isLoading}
+                disabled={(currentQuestion === 0 && !showRanking && !showMBTI) || isLoading}
                 className="border-gray-300 text-gray-700 hover:bg-gray-100"
               >
                 <ChevronLeft className="mr-2 h-4 w-4" />
@@ -450,7 +565,7 @@ export default function QuestionnairePage() {
                   disabled={!canProceed || isLoading}
                   className="bg-softblack hover:bg-gray-800 text-white"
                 >
-                  {isLastLifestyleQuestion ? "Continue to Part 2" : "Next"}
+                  {isLastLifestyleQuestion ? "Continue to Part 2" : showRanking ? "Continue to Part 3" : "Next"}
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               )}
