@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
@@ -14,12 +14,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Inter } from "next/font/google"
-import { CheckCircle, Instagram, Loader2, Save, ArrowLeft, LinkIcon, AlertCircle } from "lucide-react"
+import { CheckCircle, Instagram, Loader2, Save, ArrowLeft, AlertCircle } from "lucide-react"
 import { DashboardHeader } from "@/components/dashboard-header"
 import { toast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { createClientSideSupabaseClient } from "@/lib/supabase"
+import { ImageUpload } from "@/components/image-upload"
+import DebugStorage from "@/components/debug-storage" // Declare DebugStorage
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -229,6 +231,23 @@ export default function ProfilePage() {
     setIsSaved(false)
   }
 
+  const handleImageUploaded = (url: string) => {
+    setUserData({ ...userData, avatarUrl: url })
+    setIsSaved(false)
+    toast({
+      title: "Image uploaded",
+      description: "Your profile image has been uploaded successfully.",
+    })
+  }
+
+  const handleUploadError = (error: string) => {
+    toast({
+      title: "Upload failed",
+      description: error,
+      variant: "destructive",
+    })
+  }
+
   // Update the save button
   const handleSave = async () => {
     setIsLoading(true)
@@ -402,17 +421,17 @@ export default function ProfilePage() {
           <div className="flex flex-1">
             <main className="flex-1 p-6 flex items-center justify-center">
               <Card className="max-w-md w-full">
-                <CardHeader>
+                <CardContent className="pt-6">
                   <div className="flex items-center justify-center mb-4">
                     <AlertCircle className="h-12 w-12 text-red-500" />
                   </div>
-                  <CardTitle className="text-center">Authentication Error</CardTitle>
-                  <CardDescription className="text-center">{authError}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex justify-center">
-                  <Button asChild className="bg-softblack hover:bg-gray-800 text-white">
-                    <Link href="/auth">Log In Again</Link>
-                  </Button>
+                  <h2 className="text-xl font-semibold text-center">Authentication Error</h2>
+                  <p className="text-gray-500 text-center mt-1">{authError}</p>
+                  <div className="flex justify-center mt-6">
+                    <Button asChild className="bg-softblack hover:bg-gray-800 text-white">
+                      <Link href="/auth">Log In Again</Link>
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </main>
@@ -443,294 +462,298 @@ export default function ProfilePage() {
       <div className="flex min-h-screen flex-col">
         <DashboardHeader />
 
-        <main className="flex-1 p-6">
-          <div className="flex flex-col gap-8 max-w-4xl mx-auto">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Profile</h1>
-              <div className="flex items-center justify-between">
-                <p className="text-gray-600">Manage your personal information and settings</p>
-                <Button variant="outline" size="sm" asChild className="border-gray-300 text-gray-700 hover:bg-gray-100">
-                  <Link href="/dashboard">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Dashboard
-                  </Link>
-                </Button>
+        <main className="flex-1 px-4 py-6 sm:px-6 max-w-5xl mx-auto w-full">
+          <div className="flex flex-col gap-6">
+            {/* Header with back button */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Your Profile</h1>
+                <p className="text-gray-600 text-sm mt-1">Manage your personal information and settings</p>
               </div>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="border-gray-300 text-gray-700 hover:bg-gray-100 self-start sm:self-center"
+              >
+                <Link href="/dashboard" className="flex items-center">
+                  <ArrowLeft className="mr-1.5 h-3.5 w-3.5" />
+                  Back to Dashboard
+                </Link>
+              </Button>
             </div>
 
             <Tabs defaultValue="personal" className="w-full">
-              <TabsList className="bg-gray-100 mb-6">
-                <TabsTrigger value="personal">Personal Info</TabsTrigger>
-                <TabsTrigger value="privacy">Privacy & Settings</TabsTrigger>
+              <TabsList className="bg-gray-100 mb-4 w-full max-w-md">
+                <TabsTrigger value="personal" className="flex-1">
+                  Personal Info
+                </TabsTrigger>
+                <TabsTrigger value="privacy" className="flex-1">
+                  Privacy & Settings
+                </TabsTrigger>
               </TabsList>
 
               {/* Personal Information Tab */}
-              <TabsContent value="personal">
-                <div className="grid gap-6">
-                  {/* Profile Photo */}
-                  <Card className="bg-white/80 backdrop-blur-md border-gray-200 shadow-lg">
-                    <CardHeader>
-                      <CardTitle className="text-gray-900">Profile Photo</CardTitle>
-                      <CardDescription className="text-gray-600">Enter a URL for your profile picture</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex flex-col sm:flex-row gap-6 items-center">
-                        <Avatar className="h-24 w-24 border-2 border-gray-200">
+              <TabsContent value="personal" className="space-y-4 mt-0">
+                {/* Profile Photo */}
+                <Card className="border border-gray-200 shadow-sm">
+                  <CardContent className="p-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-gray-900">Profile Photo</h2>
+                      <p className="text-gray-500 text-sm">Upload a photo for your profile</p>
+
+                      <div className="flex items-center gap-4 mt-3">
+                        <Avatar className="h-20 w-20 border border-gray-200">
                           <AvatarImage
-                            src={userData.avatarUrl || `/placeholder.svg?height=96&width=96&text=${getInitials()}`}
+                            src={userData.avatarUrl || `/placeholder.svg?height=80&width=80&text=${getInitials()}`}
                             alt="Profile"
                           />
                           <AvatarFallback className="bg-gray-100 text-gray-800">{getInitials()}</AvatarFallback>
                         </Avatar>
-                        <div className="flex-1 space-y-2">
-                          <Label htmlFor="avatarUrl" className="text-gray-800">
-                            Profile Image URL
-                          </Label>
-                          <div className="flex gap-2">
-                            <div className="relative flex-1">
-                              <LinkIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                              <Input
-                                id="avatarUrl"
-                                name="avatarUrl"
-                                value={userData.avatarUrl}
-                                onChange={handleInputChange}
-                                className="bg-white border-gray-300 text-gray-900 pl-9"
-                                placeholder="https://example.com/your-image.jpg"
-                              />
-                            </div>
+                        <div className="flex-1">
+                          <ImageUpload onImageUploaded={handleImageUploaded} onError={handleUploadError} size="small" />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Basic Information */}
+                <Card className="border border-gray-200 shadow-sm">
+                  <CardContent className="p-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-gray-900">Basic Information</h2>
+                      <p className="text-gray-500 text-sm">Your personal and academic details</p>
+
+                      <div className="grid gap-4 mt-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
+                              First Name
+                            </Label>
+                            <Input
+                              id="firstName"
+                              name="firstName"
+                              value={userData.firstName}
+                              onChange={handleInputChange}
+                              className="mt-1 bg-white border-gray-300 text-gray-900"
+                            />
                           </div>
-                          <p className="text-xs text-gray-500">
-                            Enter a direct URL to your profile image (JPG, PNG, or GIF)
-                          </p>
+                          <div>
+                            <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
+                              Last Name
+                            </Label>
+                            <Input
+                              id="lastName"
+                              name="lastName"
+                              value={userData.lastName}
+                              onChange={handleInputChange}
+                              className="mt-1 bg-white border-gray-300 text-gray-900"
+                            />
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
 
-                  {/* Basic Information */}
-                  <Card className="bg-white/80 backdrop-blur-md border-gray-200 shadow-lg">
-                    <CardHeader>
-                      <CardTitle className="text-gray-900">Basic Information</CardTitle>
-                      <CardDescription className="text-gray-600">Your personal and academic details</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="firstName" className="text-gray-800">
-                            First Name
+                        <div>
+                          <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                            University Email
                           </Label>
                           <Input
-                            id="firstName"
-                            name="firstName"
-                            value={userData.firstName}
+                            id="email"
+                            name="email"
+                            value={userData.email}
                             onChange={handleInputChange}
-                            className="bg-white border-gray-300 text-gray-900"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="lastName" className="text-gray-800">
-                            Last Name
-                          </Label>
-                          <Input
-                            id="lastName"
-                            name="lastName"
-                            value={userData.lastName}
-                            onChange={handleInputChange}
-                            className="bg-white border-gray-300 text-gray-900"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="email" className="text-gray-800">
-                          University Email
-                        </Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          value={userData.email}
-                          onChange={handleInputChange}
-                          className="bg-white border-gray-300 text-gray-900"
-                          disabled
-                        />
-                        <p className="text-xs text-gray-500">Your university email cannot be changed</p>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="university" className="text-gray-800">
-                            University
-                          </Label>
-                          <Input
-                            id="university"
-                            name="university"
-                            value={userData.university}
-                            onChange={handleInputChange}
-                            className="bg-white border-gray-300 text-gray-900"
+                            className="mt-1 bg-white border-gray-300 text-gray-900"
                             disabled
                           />
+                          <p className="text-xs text-gray-500 mt-1">Your university email cannot be changed</p>
                         </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="major" className="text-gray-800">
-                            Major
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <Label htmlFor="university" className="text-sm font-medium text-gray-700">
+                              University
+                            </Label>
+                            <Input
+                              id="university"
+                              name="university"
+                              value={userData.university}
+                              onChange={handleInputChange}
+                              className="mt-1 bg-white border-gray-300 text-gray-900"
+                              disabled
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="major" className="text-sm font-medium text-gray-700">
+                              Major
+                            </Label>
+                            <Input
+                              id="major"
+                              name="major"
+                              value={userData.major}
+                              onChange={handleInputChange}
+                              className="mt-1 bg-white border-gray-300 text-gray-900"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <Label htmlFor="year" className="text-sm font-medium text-gray-700">
+                            Year
+                          </Label>
+                          <Select value={userData.year} onValueChange={(value) => handleSelectChange("year", value)}>
+                            <SelectTrigger className="mt-1 bg-white border-gray-300 text-gray-900">
+                              <SelectValue placeholder="Select your year" />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white border-gray-200 text-gray-900">
+                              <SelectItem value="Freshman">Freshman</SelectItem>
+                              <SelectItem value="Sophomore">Sophomore</SelectItem>
+                              <SelectItem value="Junior">Junior</SelectItem>
+                              <SelectItem value="Senior">Senior</SelectItem>
+                              <SelectItem value="Graduate">Graduate</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Bio & Contact */}
+                <Card className="border border-gray-200 shadow-sm">
+                  <CardContent className="p-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-gray-900">Bio & Contact Information</h2>
+                      <p className="text-gray-500 text-sm">Tell others about yourself and how to reach you</p>
+
+                      <div className="grid gap-4 mt-3">
+                        <div>
+                          <Label htmlFor="bio" className="text-sm font-medium text-gray-700">
+                            About Me
+                          </Label>
+                          <Textarea
+                            id="bio"
+                            name="bio"
+                            value={userData.bio}
+                            onChange={handleInputChange}
+                            className="mt-1 bg-white border-gray-300 text-gray-900 min-h-[100px]"
+                            placeholder="Tell others about yourself, your interests, and what you're looking for"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                            Phone Number
                           </Label>
                           <Input
-                            id="major"
-                            name="major"
-                            value={userData.major}
+                            id="phone"
+                            name="phone"
+                            value={userData.phone}
                             onChange={handleInputChange}
-                            className="bg-white border-gray-300 text-gray-900"
+                            className="mt-1 bg-white border-gray-300 text-gray-900"
+                          />
+                        </div>
+
+                        <div>
+                          <Label htmlFor="instagram" className="text-sm font-medium text-gray-700 flex items-center">
+                            <Instagram className="h-3.5 w-3.5 mr-1.5" />
+                            Instagram Username
+                          </Label>
+                          <Input
+                            id="instagram"
+                            name="instagram"
+                            value={userData.instagram}
+                            onChange={handleInputChange}
+                            className="mt-1 bg-white border-gray-300 text-gray-900"
+                            placeholder="username (without @)"
                           />
                         </div>
                       </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="year" className="text-gray-800">
-                          Year
-                        </Label>
-                        <Select value={userData.year} onValueChange={(value) => handleSelectChange("year", value)}>
-                          <SelectTrigger className="bg-white border-gray-300 text-gray-900">
-                            <SelectValue placeholder="Select your year" />
-                          </SelectTrigger>
-                          <SelectContent className="bg-white border-gray-200 text-gray-900">
-                            <SelectItem value="Freshman">Freshman</SelectItem>
-                            <SelectItem value="Sophomore">Sophomore</SelectItem>
-                            <SelectItem value="Junior">Junior</SelectItem>
-                            <SelectItem value="Senior">Senior</SelectItem>
-                            <SelectItem value="Graduate">Graduate</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Bio & Contact */}
-                  <Card className="bg-white/80 backdrop-blur-md border-gray-200 shadow-lg">
-                    <CardHeader>
-                      <CardTitle className="text-gray-900">Bio & Contact Information</CardTitle>
-                      <CardDescription className="text-gray-600">
-                        Tell others about yourself and how to reach you
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="bio" className="text-gray-800">
-                          About Me
-                        </Label>
-                        <Textarea
-                          id="bio"
-                          name="bio"
-                          value={userData.bio}
-                          onChange={handleInputChange}
-                          className="bg-white border-gray-300 text-gray-900 min-h-[120px]"
-                          placeholder="Tell others about yourself, your interests, and what you're looking for"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-gray-800">
-                          Phone Number
-                        </Label>
-                        <Input
-                          id="phone"
-                          name="phone"
-                          value={userData.phone}
-                          onChange={handleInputChange}
-                          className="bg-white border-gray-300 text-gray-900"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="instagram" className="text-gray-800">
-                          <Instagram className="h-4 w-4 inline mr-2" />
-                          Instagram Username
-                        </Label>
-                        <Input
-                          id="instagram"
-                          name="instagram"
-                          value={userData.instagram}
-                          onChange={handleInputChange}
-                          className="bg-white border-gray-300 text-gray-900"
-                          placeholder="username (without @)"
-                        />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </TabsContent>
 
               {/* Privacy & Settings Tab */}
-              <TabsContent value="privacy">
-                <Card className="bg-white/80 backdrop-blur-md border-gray-200 shadow-lg">
-                  <CardHeader>
-                    <CardTitle className="text-gray-900">Privacy Settings</CardTitle>
-                    <CardDescription className="text-gray-600">
-                      Control what information is visible to others
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <Label className="text-gray-800">Show Email Address</Label>
-                        <p className="text-sm text-gray-600">Allow others to see your email address</p>
+              <TabsContent value="privacy" className="mt-0">
+                <Card className="border border-gray-200 shadow-sm">
+                  <CardContent className="p-4">
+                    <div>
+                      <h2 className="text-lg font-medium text-gray-900">Privacy Settings</h2>
+                      <p className="text-gray-500 text-sm">Control what information is visible to others</p>
+
+                      <div className="mt-4 space-y-3">
+                        <div className="flex items-center justify-between py-2">
+                          <div>
+                            <Label className="text-sm font-medium text-gray-700">Show Email Address</Label>
+                            <p className="text-xs text-gray-500">Allow others to see your email address</p>
+                          </div>
+                          <Switch
+                            checked={userData.showEmail}
+                            onCheckedChange={(checked) => handleSwitchChange("showEmail", checked)}
+                            className="data-[state=checked]:bg-softblack"
+                          />
+                        </div>
+
+                        <Separator className="bg-gray-200" />
+
+                        <div className="flex items-center justify-between py-2">
+                          <div>
+                            <Label className="text-sm font-medium text-gray-700">Show Phone Number</Label>
+                            <p className="text-xs text-gray-500">Allow others to see your phone number</p>
+                          </div>
+                          <Switch
+                            checked={userData.showPhone}
+                            onCheckedChange={(checked) => handleSwitchChange("showPhone", checked)}
+                            className="data-[state=checked]:bg-softblack"
+                          />
+                        </div>
+
+                        <Separator className="bg-gray-200" />
+
+                        <div className="flex items-center justify-between py-2">
+                          <div>
+                            <Label className="text-sm font-medium text-gray-700">Show Social Media</Label>
+                            <p className="text-xs text-gray-500">Allow others to see your social media profiles</p>
+                          </div>
+                          <Switch
+                            checked={userData.showSocial}
+                            onCheckedChange={(checked) => handleSwitchChange("showSocial", checked)}
+                            className="data-[state=checked]:bg-softblack"
+                          />
+                        </div>
                       </div>
-                      <Switch
-                        checked={userData.showEmail}
-                        onCheckedChange={(checked) => handleSwitchChange("showEmail", checked)}
-                        className="data-[state=checked]:bg-softblack"
-                      />
-                    </div>
-
-                    <Separator className="bg-gray-200" />
-
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <Label className="text-gray-800">Show Phone Number</Label>
-                        <p className="text-sm text-gray-600">Allow others to see your phone number</p>
-                      </div>
-                      <Switch
-                        checked={userData.showPhone}
-                        onCheckedChange={(checked) => handleSwitchChange("showPhone", checked)}
-                        className="data-[state=checked]:bg-softblack"
-                      />
-                    </div>
-
-                    <Separator className="bg-gray-200" />
-
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <Label className="text-gray-800">Show Social Media</Label>
-                        <p className="text-sm text-gray-600">Allow others to see your social media profiles</p>
-                      </div>
-                      <Switch
-                        checked={userData.showSocial}
-                        onCheckedChange={(checked) => handleSwitchChange("showSocial", checked)}
-                        className="data-[state=checked]:bg-softblack"
-                      />
                     </div>
                   </CardContent>
                 </Card>
               </TabsContent>
             </Tabs>
 
-            <div className="flex justify-end gap-4">
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100">
+            {/* Add the debug storage component */}
+            {process.env.NODE_ENV === "development" && <DebugStorage />}
+
+            <div className="flex justify-end gap-3 mt-2">
+              <Button variant="outline" size="sm" className="border-gray-300 text-gray-700 hover:bg-gray-100">
                 Cancel
               </Button>
-              <Button onClick={handleSave} disabled={isLoading} className="bg-softblack hover:bg-gray-800 text-white">
+              <Button
+                onClick={handleSave}
+                disabled={isLoading}
+                size="sm"
+                className="bg-softblack hover:bg-gray-800 text-white"
+              >
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
                     Saving...
                   </>
                 ) : isSaved ? (
                   <>
-                    <CheckCircle className="mr-2 h-4 w-4" />
+                    <CheckCircle className="mr-1.5 h-3.5 w-3.5" />
                     Saved
                   </>
                 ) : (
                   <>
-                    <Save className="mr-2 h-4 w-4" />
+                    <Save className="mr-1.5 h-3.5 w-3.5" />
                     Save Changes
                   </>
                 )}
